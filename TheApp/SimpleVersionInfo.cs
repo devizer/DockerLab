@@ -53,7 +53,7 @@ namespace TheApp
             using (SqlConnection con = new SqlConnection(cs))
             {
                 con.Open();
-                string sql = "Select Cast(ServerProperty('ProductVersion') as nvarchar) + ' (' + Cast(ServerProperty('Edition') as nvarchar) + ')';";
+                string sql = "Select Cast(ServerProperty('ProductVersion') as nvarchar) + ' [' + Cast(ServerProperty('Edition') as nvarchar) + ']';";
                 ver = con.ExecuteScalar<string>(sql);
             }
 
