@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using Dapper;
 using MongoDB.Driver;
 using MongoDB.Profiler;
@@ -21,9 +22,10 @@ namespace SandBoxApp
             bool help = false, nologo = false, isVer = false;
             List<Action> actions = new List<Action>();
             var appVer = Assembly.GetEntryAssembly().GetName().Version.ToString();
-
+            int sleep = -1;
             var p = new OptionSet(StringComparer.InvariantCultureIgnoreCase)
             {
+                {"Sleep=", "Sleep in seconds", v => int.TryParse(v, out sleep)},
                 {"MySQL=", "MySQL connection", v => actions.Add(() => GoMySQL(v))},
                 {"MSSQL=", "MS SQL connection", v => actions.Add(() => GoMSSQL(v))},
                 {"PostgreSQL=", "PostgreSQL connection", v => actions.Add(() => GoPostgreSQL(v))},
@@ -53,6 +55,16 @@ namespace SandBoxApp
             {
                 p.WriteOptionDescriptions(Console.Out);
                 return 0;
+            }
+
+            if (sleep > 0)
+            {
+                for (int i = 0; i < sleep - 1; i++)
+                {
+                    Console.WriteLine("Sleeping " + i + "/" + sleep);
+                    Thread.Sleep(1000);
+                }
+                
             }
 
             foreach (var a in actions)
