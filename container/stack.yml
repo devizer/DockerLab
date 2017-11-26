@@ -6,15 +6,21 @@ services:
     theapp:
         image: vlad/theapp
         depends_on:
-         - "db"
-    db:
+         - "mysql"
+         - "redis"
+         - "postgres"
+
+    mysql:
         image: mysql:5.5
         restart: always
         environment:
             MYSQL_ROOT_PASSWORD: example
 
-    adminer:
-        image: adminer
+    redis:
+        image: redis
         restart: always
-        ports:
-            - 8080:8080
+
+    postgres:
+        image: postgres
+        restart: always
+
