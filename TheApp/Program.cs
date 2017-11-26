@@ -67,7 +67,7 @@ namespace TheApp
             // Wait_Prev_Implementation();
 
             StringBuilder startup = new StringBuilder("Waiting for network services:");
-            foreach (var m in Model.Connections)
+            foreach (var m in Model.Connections.OrderBy(x => x.Family.ToString()))
             {
                 startup.AppendLine();
                 startup.Append(Format(m.Family.ToString(), m.ConnectionString));
@@ -132,7 +132,13 @@ namespace TheApp
             done.Wait();
 
             StringBuilder final = new StringBuilder("WaitFor final report:");
-            foreach (var item in Model.Connections)
+            var sorted = Model.Connections
+                .OrderBy(x => !x.IsOk)
+                .ThenBy(x => x.OkTime)
+                .ThenBy(x => x.Family)
+                .ThenBy(x => x.ConnectionString);
+
+            foreach (var item in sorted)
             {
                 var line1 = Format(item.Family.ToString(), $"{item.ConnectionString}");
                 var line2 = Format("Version", item.Version + $" (in {item.OkTime.ToString("f1")} secs)");
@@ -242,21 +248,5 @@ namespace TheApp
             Console.ForegroundColor = f;
         }
 
-
-        static string ExpandEnv(string arg, string kind)
-        {
-            return Environment.ExpandEnvironmentVariables(arg);
-
-            if (arg.StartsWith("Env:", StringComparison.InvariantCultureIgnoreCase))
-            {
-                var name = arg.Substring(4).Trim();
-                if (String.IsNullOrEmpty(name))
-                    throw new ArgumentException($"{kind} argument is wrong");
-
-                // var ret = Environment.GetEnvironmentVariables();
-            }
-
-            throw new NotImplementedException();
-        }
     }
 }
