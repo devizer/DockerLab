@@ -63,7 +63,7 @@ namespace SandBoxApp
                 }
                 catch (Exception ex)
                 {
-                    Write("Exveption", ex.GetExeptionDigest());
+                    Write("Exception", ex.GetExeptionDigest());
 
                 }
                 Console.WriteLine();
@@ -103,6 +103,12 @@ namespace SandBoxApp
                 AbortOnConnectFail = false,
             };
 
+            var con = ConnectionMultiplexer.Connect(configOptions);
+            var db = con.GetDatabase();
+            var key = "Ping " + Guid.NewGuid();
+            db.StringSet(key, "sure");
+            db.KeyDelete(key);
+
             var first = cs.Split(',')[0].Split(':');
             string host = first[0];
             int port = 6379;
@@ -112,8 +118,7 @@ namespace SandBoxApp
                 port = int.Parse(first[1]);
             }
 
-            var sharedMultiplexor = ConnectionMultiplexer.Connect(configOptions);
-            var server = sharedMultiplexor.GetServer(host, port);
+            var server = con.GetServer(host, port);
             var ver = $"{server.Version} ({server.ServerType})";
             Write("Version", ver);
 
