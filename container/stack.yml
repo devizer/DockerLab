@@ -11,6 +11,7 @@ services:
          - "postgres"
          - "mongodb"
          - "rabbitmq"
+         - "sqlserver"
 
     mysql:
         image: mysql:5.5
@@ -45,3 +46,9 @@ services:
         restart: always
         ports:
         - "5672"
+
+    sqlserver:
+        image: microsoft/mssql-server-linux
+        restart: always
+        ports:
+        - "1433"
