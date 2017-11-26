@@ -123,10 +123,11 @@ namespace TheApp
                     Func<bool> isProgress = () => !done.WaitHandle.WaitOne(0);
                     while (isProgress())
                     {
-                        Thread.Sleep(2000);
+                        Thread.Sleep(3000);
                         var secs = (int) Model.StartAt.Elapsed.TotalSeconds;
+                        var stillWaiting = Model.Clone().Connections.Where(x => !x.IsOk).Select(x => x.Family.ToString());
                         if (isProgress())
-                            Console.WriteLine($"Waiting for dependencies ({secs} / {Model.Timeout})");
+                            Console.WriteLine($"Waiting for dependencies ({secs} / {Model.Timeout}): " + string.Join(", ", stillWaiting));
                     }
                 });
 
