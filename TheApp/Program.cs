@@ -59,7 +59,7 @@ namespace SandBoxApp
 
             if (sleep > 0)
             {
-                for (int i = 0; i < sleep - 1; i++)
+                for (int i = 1; i <= sleep; i++)
                 {
                     Console.WriteLine("Sleeping " + i + "/" + sleep);
                     Thread.Sleep(1000);
@@ -118,8 +118,7 @@ namespace SandBoxApp
             var con = ConnectionMultiplexer.Connect(configOptions);
             var db = con.GetDatabase();
             var key = "Ping " + Guid.NewGuid();
-            db.StringSet(key, "sure");
-            db.KeyDelete(key);
+            db.StringGet(key);
 
             var first = cs.Split(',')[0].Split(':');
             string host = first[0];

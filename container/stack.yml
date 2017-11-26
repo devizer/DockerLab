@@ -10,6 +10,7 @@ services:
          - "redis"
          - "postgres"
          - "mongodb"
+         - "rabbitmq"
 
     mysql:
         image: mysql:5.5
@@ -26,7 +27,7 @@ services:
         - "6379"
 
     postgres:
-        image: postgres
+        image: postgres:9.4
         restart: always
         environment:
             POSTGRES_PASSWORD: postgres
@@ -34,8 +35,13 @@ services:
         - "5432"
 
     mongodb:
-        image: mongo
+        image: mongo:3.4
         restart: always
         ports:
         - "27017"
 
+    rabbitmq:
+        image: rabbitmq:3.6
+        restart: always
+        ports:
+        - "5672"

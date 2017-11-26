@@ -7,6 +7,6 @@ ENTRYPOINT [ "./TheApp",  "-Sleep=20", \
  "-MSSQL=      Data Source = tcp:mssql,1433; Integrated Security=true;", \
  "-PostgreSQL= Host = postgres; Port=5432; User ID=postgres; Password=postgres; Database=postgres;", \
  "-MongoDB=    mongodb://mongodb:27017", \
- "-RabbitMQ=   amqp://localhost:5672", \
+ "-RabbitMQ=   amqp://rabbitmq:5672", \
  "-Redis=      redis:6379" ]
 
