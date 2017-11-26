@@ -15,7 +15,7 @@ services:
 
     mysql:
         image: mysql:5.5
-        restart: no
+        restart: "no"
         environment:
             MYSQL_ROOT_PASSWORD: example
         ports:
@@ -23,13 +23,13 @@ services:
 
     redis:
         image: redis
-        restart: no
+        restart: "no"
         ports:
         - "6379"
 
     postgres:
         image: postgres:9.4
-        restart: no
+        restart: "no"
         environment:
             POSTGRES_PASSWORD: postgres
         ports:
@@ -37,19 +37,19 @@ services:
 
     mongodb:
         image: mongo:3.4
-        restart: no
+        restart: "no"
         ports:
         - "27017"
 
     rabbitmq:
         image: rabbitmq:3.6
-        restart: no
+        restart: "no"
         ports:
         - "5672"
 
     sqlserver:
         image: microsoft/mssql-server-linux
-        restart: no
+        restart: "no"
         environment:
             ACCEPT_EULA: Y 
             SA_PASSWORD: ~1qazxsw2
