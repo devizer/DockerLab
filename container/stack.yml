@@ -51,7 +51,7 @@ services:
         image: microsoft/mssql-server-linux
         restart: always
         environment:
-	    ACCEPT_EULA: Y 
+            ACCEPT_EULA: Y 
             SA_PASSWORD: ~1qazxsw2
             MSSQL_PID: Developer
         ports:
