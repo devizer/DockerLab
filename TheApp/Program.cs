@@ -75,7 +75,7 @@ namespace SandBoxApp
                 }
                 catch (Exception ex)
                 {
-                    Write("Exception", ex.GetExeptionDigest());
+                    WriteError("Exception", ex.GetExeptionDigest());
 
                 }
                 Console.WriteLine();
@@ -101,7 +101,16 @@ namespace SandBoxApp
 
         static void Write(string caption, string value)
         {
+            var f = Console.ForegroundColor;
             Console.WriteLine(" " + (caption + " ").PadRight(16, '.') + " : " + value);
+        }
+
+        static void WriteError(string caption, string value)
+        {
+            var f = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(" " + (caption + " ").PadRight(16, '.') + " : " + value);
+            Console.ForegroundColor = f;
         }
 
         private static void GoRedis(string cs)
