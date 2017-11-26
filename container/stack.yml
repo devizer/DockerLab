@@ -28,7 +28,7 @@ services:
             WAIT_FOR_MSSQL_42: "Data Source = sqlserver ; User ID=sa; Password = ~1qazxsw2; Timeout = 5"
 
     mysql:
-        image: mysql:8
+        image: mysql:latest
         restart: "no"
         environment:
             MYSQL_ROOT_PASSWORD: example
