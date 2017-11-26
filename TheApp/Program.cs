@@ -1,18 +1,13 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using Dapper;
-using MongoDB.Driver;
 using MongoDB.Profiler;
-using MySql.Data.MySqlClient;
 using NDesk.Options;
-using Npgsql;
-using RabbitMQ.Client;
-using StackExchange.Redis;
 
 namespace TheApp
 {
@@ -20,6 +15,7 @@ namespace TheApp
     {
 
         public static WaitModel Model = new WaitModel();
+        private static string EnvPrefix = "WAIT_FOR_";
 
         static int Main(string[] args)
         {
@@ -28,7 +24,7 @@ namespace TheApp
 
         private static int Main_Impl(string[] args)
         {
-            bool help = false, nologo = false, isVer = false;
+            bool needHelp = false, needLogo = false, needVer = false;
             var appVer = Assembly.GetEntryAssembly().GetName().Version.ToString();
             int timeout = -1;
             var p = new OptionSet(StringComparer.InvariantCultureIgnoreCase)
@@ -40,28 +36,28 @@ namespace TheApp
                 {"RabbitMQ=", "RabbitMQ connection", v => Add(ConnectionFamily.RabbitMQ, v)},
                 {"MongoDB=", "MongoDB Connection", v => Add(ConnectionFamily.MongoDB, v)},
                 {"Redis=", "Redis Connection", v => Add(ConnectionFamily.Redis, v)},
-                {"v|Version", "Show version", v => isVer = true},
-                {"h|?|Help", "Display this help", v => help = v != null},
-                {"n|nologo", "Hide logo", v => nologo = v != null}
+                {"v|Version", "Show version", v => needVer = true},
+                {"h|?|Help", "Display this help", v => needHelp = v != null},
+                {"n|nologo", "Hide logo", v => needLogo = v != null}
             };
 
 
             p.Parse(args);
             Model.Timeout = timeout;
 
-            if (isVer)
+            if (needVer)
             {
                 Console.WriteLine(appVer);
                 return 0;
             }
 
-            if (!nologo)
+            if (!needLogo)
             {
-                Console.WriteLine($"SandBoxApp {appVer} is living in docker");
+                Console.WriteLine($"WaitFor {appVer} is living in docker");
                 Console.WriteLine();
             }
 
-            if (help)
+            if (needHelp)
             {
                 p.WriteOptionDescriptions(Console.Out);
                 return 0;
@@ -77,36 +73,38 @@ namespace TheApp
             }
 
             Console.WriteLine(startup + Environment.NewLine);
+            PopulateTargetsByEnv();
 
             CountdownEvent done = new CountdownEvent(Model.Connections.Count);
-            foreach (ConnectionInfo info in Model.Connections)
+            foreach (ConnectionInfo infoCopy in Model.Connections)
             {
-                var item = info;
+                var info = infoCopy;
                 ThreadPool.QueueUserWorkItem(_ =>
                 {
                     while (true)
                     {
                         try
                         {
-                            item.Version = SimpleVersionInfo.GetVersion(item.Family, item.ConnectionString);
-                            item.Exception = null;
-                            item.OkTime = Model.StartAt.ElapsedMilliseconds / 1000m;
-                            item.IsOk = true;
-                            InformNewStatus(item);
+                            info.Version = SimpleVersionInfo.GetVersion(info.Family, info.ConnectionString);
+                            info.Exception = null;
+                            info.OkTime = Model.StartAt.ElapsedMilliseconds / 1000m;
+                            info.IsOk = true;
+                            InformNewStatus(info);
                             break;
                         }
                         catch (Exception ex)
                         {
                             var exeptionDigest = ex.GetExeptionDigest();
-                            if (item.Family == ConnectionFamily.MongoDB)
-                                exeptionDigest = exeptionDigest.Split('\r', '\n').Select(x => x.Trim()).Where(x => x.Length > 0).FirstOrDefault();
+                            // MongoDB exception includes all the stack trace in the Message ;(
+                            if (info.Family == ConnectionFamily.MongoDB)
+                                exeptionDigest = exeptionDigest.Split('\r', '\n').Select(x => x.Trim()).FirstOrDefault(x => x.Length > 0);
 
-                            item.Exception = exeptionDigest;
+                            info.Exception = exeptionDigest;
                         }
 
                         if (Model.StartAt.Elapsed > TimeSpan.FromSeconds(Model.Timeout))
                         {
-                            InformNewStatus(item);
+                            InformNewStatus(info);
                             break;
                         }
 
@@ -147,6 +145,26 @@ namespace TheApp
             Console.WriteLine(final + Environment.NewLine);
 
             return 0;
+        }
+
+        static void PopulateTargetsByEnv()
+        {
+            var families = Enum.GetValues(typeof(ConnectionFamily)).Cast<ConnectionFamily>().ToArray();
+            IDictionary all = Environment.GetEnvironmentVariables();
+            foreach (object keyRaw in all.Keys)
+            {
+                var key = Convert.ToString(keyRaw);
+                if (!key.StartsWith(EnvPrefix, StringComparison.InvariantCultureIgnoreCase))
+                    continue;
+
+                foreach (var fam in families)
+                {
+                    if (key.StartsWith(EnvPrefix + fam, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        Add(fam, Convert.ToString(all[key]));
+                    }
+                }
+            }
         }
 
         private static void InformNewStatus(ConnectionInfo item)

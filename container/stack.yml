@@ -13,10 +13,22 @@ services:
          - "rabbitmq"
          - "sqlserver"
         links:
-         - sqlserver
+         - "mysql"
+         - "redis"
+         - "postgres"
+         - "mongodb"
+         - "rabbitmq"
+         - "sqlserver"
+        environment:
+            WAIT_FOR_MySQL_42: "Server = mysql; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5"
+            WAIT_FOR_PostgreSQL: "Host = postgres; Port=5432; User ID=postgres; Password=postgres; Database=postgres; Timeout = 5"
+            WAIT_FOR_MongoDB_42: "mongodb://mongodb:27017"
+            WAIT_FOR_RabbitMQ_42: "amqp://rabbitmq:5672"
+            WAIT_FOR_Redis_42: "redis:6379"
+            WAIT_FOR_MSSQL_42: "Data Source = sqlserver ; User ID=sa; Password = ~1qazxsw2; Timeout = 5"
 
     mysql:
-        image: mysql:5.5
+        image: mysql:8
         restart: "no"
         environment:
             MYSQL_ROOT_PASSWORD: example
