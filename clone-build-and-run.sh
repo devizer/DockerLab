@@ -13,7 +13,7 @@ cd bin/linux
  "-RabbitMQ=   amqp://192.168.0.8:5672" \
  "-Redis=      192.168.0.8:6379"
 
-cp ../../../App.Dockerfile .
+cp ../../../container/* .
 docker rmi -f vlad/theapp
 docker build -t vlad/theapp -f ./App.Dockerfile .
 docker run -it --rm vlad/theapp ./TheApp --help

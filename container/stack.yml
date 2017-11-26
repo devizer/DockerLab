@@ -1,0 +1,19 @@
+# Use root/example as user/password credentials
+version: '3.1'
+
+services:
+
+    theapp:
+        image: vlad/theapp
+
+    db:
+        image: mysql:5.5
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: example
+
+    adminer:
+        image: adminer
+        restart: always
+        ports:
+            - 8080:8080
