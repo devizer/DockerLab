@@ -16,8 +16,8 @@ cd bin/linux
 cp ../../../container/* .
 docker rmi -f vlad/theapp
 docker build -t vlad/theapp -f ./App.Dockerfile .
-docker run -it --rm vlad/theapp ./TheApp --help
-docker run -it --rm vlad/theapp ./TheApp
+docker run -i --rm vlad/theapp ./TheApp --help
+docker run -i --rm vlad/theapp ./TheApp
 
 docker-compose -f stack.yml down
 docker-compose -f stack.yml up
