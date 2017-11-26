@@ -13,25 +13,32 @@ using Npgsql;
 using RabbitMQ.Client;
 using StackExchange.Redis;
 
-namespace SandBoxApp
+namespace TheApp
 {
     class Program
     {
+
+        public static WaitModel Model = new WaitModel();
+
         static int Main(string[] args)
         {
+            return Main_Impl(args);
+        }
+
+        private static int Main_Impl(string[] args)
+        {
             bool help = false, nologo = false, isVer = false;
-            List<Action> actions = new List<Action>();
             var appVer = Assembly.GetEntryAssembly().GetName().Version.ToString();
             int sleep = -1;
             var p = new OptionSet(StringComparer.InvariantCultureIgnoreCase)
             {
-                {"Sleep=", "Sleep in seconds", v => int.TryParse(v, out sleep)},
-                {"MySQL=", "MySQL connection", v => actions.Add(() => GoMySQL(v))},
-                {"MSSQL=", "MS SQL connection", v => actions.Add(() => GoMSSQL(v))},
-                {"PostgreSQL=", "PostgreSQL connection", v => actions.Add(() => GoPostgreSQL(v))},
-                {"RabbitMQ=", "RabbitMQ connection", v => actions.Add(() => GoRabbitMQ(v))},
-                {"MongoDB=", "MongoDB Connection", v => actions.Add(() => GoMongoDB(v))},
-                {"Redis=", "Redis Connection", v => actions.Add(() => GoRedis(v))},
+                {"Timeout=", "Timeout in seconds", v => Int32.TryParse(v, out sleep)},
+                {"MySQL=", "MySQL connection", v => Add(ConnectionFamily.MySQL, v)},
+                {"MSSQL=", "MS SQL connection", v => Add(ConnectionFamily.MSSQL, v)},
+                {"PostgreSQL=", "PostgreSQL connection", v => Add(ConnectionFamily.Postgres, v)},
+                {"RabbitMQ=", "RabbitMQ connection", v => Add(ConnectionFamily.RabbitMQ, v)},
+                {"MongoDB=", "MongoDB Connection", v => Add(ConnectionFamily.MongoDB, v)},
+                {"Redis=", "Redis Connection", v => Add(ConnectionFamily.Redis, v)},
                 {"v|Version", "Show version", v => isVer = true},
                 {"h|?|Help", "Display this help", v => help = v != null},
                 {"n|nologo", "Hide logo", v => nologo = v != null}
@@ -64,48 +71,49 @@ namespace SandBoxApp
                     Console.WriteLine("Sleeping " + i + "/" + sleep);
                     Thread.Sleep(1000);
                 }
-                
             }
 
-            foreach (var a in actions)
+            foreach (ConnectionInfo info in Model.Connections)
             {
+                var item = info;
                 try
                 {
-                    a();
+                    var ver = SimpleVersionInfo.GetVersion(item.Family, item.ConnectionString);
+                    Write(item.Family.ToString(), item.ConnectionString);
+                    Write("Version", ver);
                 }
                 catch (Exception ex)
                 {
+                    Write(item.Family.ToString(), item.ConnectionString);
                     WriteError("Exception", ex.GetExeptionDigest());
-
                 }
+
                 Console.WriteLine();
             }
 
             return 0;
         }
 
-        private static void GoMSSQL(string cs)
+        // Single Threaded only
+        static void Add(ConnectionFamily family, string connectionString)
         {
-            cs = cs.Trim();
-            Write("MS SQL", cs);
-            string ver;
-            using (SqlConnection con = new SqlConnection(cs))
+            Model.Connections.Add(new ConnectionInfo()
             {
-                con.Open();
-                string sql = "Select Cast(ServerProperty('ProductVersion') as nvarchar) + ' (' + Cast(ServerProperty('Edition') as nvarchar) + ')';";
-                ver = con.ExecuteScalar<string>(sql);
-            }
-
-            Write("Version", ver);
+                Family = family,
+                ConnectionString = connectionString.Trim(),
+                Exception = null,
+                IsOk = false,
+                OkTime = 0m,
+                Version = null,
+            });
         }
 
         static void Write(string caption, string value)
         {
-            var f = Console.ForegroundColor;
             Console.WriteLine(" " + (caption + " ").PadRight(16, '.') + " : " + value);
         }
 
-        static void WriteError(string caption, string value)
+        private static void WriteError(string caption, string value)
         {
             var f = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Red;
@@ -113,107 +121,6 @@ namespace SandBoxApp
             Console.ForegroundColor = f;
         }
 
-        private static void GoRedis(string cs)
-        {
-            cs = cs.Trim();
-            Write("Redis", cs);
-
-            var configOptions = new ConfigurationOptions()
-            {
-                EndPoints = { cs },
-                AbortOnConnectFail = false,
-            };
-
-            var con = ConnectionMultiplexer.Connect(configOptions);
-            var db = con.GetDatabase();
-            var key = "Ping " + Guid.NewGuid();
-            db.StringGet(key);
-
-            var first = cs.Split(',')[0].Split(':');
-            string host = first[0];
-            int port = 6379;
-            if (first.Length == 2)
-            {
-                host = first[0];
-                port = int.Parse(first[1]);
-            }
-
-            var server = con.GetServer(host, port);
-            var ver = $"{server.Version} ({server.ServerType})";
-            Write("Version", ver);
-
-
-        }
-
-        private static void GoMongoDB(string uri)
-        {
-            Write("MongoDB", uri.Trim());
-            var client = new MongoClient(uri.Trim());
-            var db = client.GetDatabase("admin");
-            db.Ping();
-            var ver = db.GetMongoServerVersionAsString();
-            Write("Version", ver);
-        }
-
-        private static void GoRabbitMQ(string s)
-        {
-
-            Write("RabbitMQ", s.Trim());
-            string ver = null;
-            var factory = new ConnectionFactory() {Uri = new Uri(s.Trim())};
-            using (IConnection connection = factory.CreateConnection())
-            {
-
-                IDictionary<string, object> serverProperties = connection.ServerProperties;
-                object verRaw = serverProperties["version"];
-                // ver = ASCIIEncoding.ASCII.GetString((verRaw as byte[]) ?? new byte[0]);
-                ver = new UTF8Encoding(false).GetString((verRaw as byte[]) ?? new byte[0]);
-
-
-/*
-                foreach (string key in serverProperties.Keys)
-                {
-                    var raw = serverProperties[key] as byte[];
-                    if (raw != null)
-                    {
-                        var val = new UTF8Encoding(false).GetString(raw);
-                        Write(key, val);
-                    }
-                }
-*/
-
-
-                using (var channel = connection.CreateModel())
-                {
-                    var queue = "Temp Queue " + Guid.NewGuid().ToString("N");
-                    channel.QueueDeclare(queue, false, false, true, null);
-                    channel.BasicPublish("", queue, false);
-                }
-            }
-
-            Write("Version", ver);
-        }
-
-
-        private static void GoPostgreSQL(string cs)
-        {
-            Write("PostgreSQL", cs.Trim());
-            NpgsqlConnection con = new NpgsqlConnection(ExpandEnv(cs, "PostgreSQL"));
-            con.Open();
-            var ver = con.ExecuteScalar<string>("Select Version();");
-            Write("Version", ver);
-
-        }
-
-
-        private static void GoMySQL(string cs)
-        {
-            Write("MySQL", cs.Trim());
-            MySqlConnection con = new MySqlConnection(ExpandEnv(cs, "MySQL"));
-            con.Open();
-            var ver = con.ExecuteScalar<string>("Select Version();");
-            Write("Version", ver);
-        }
 
         static string ExpandEnv(string arg, string kind)
         {
@@ -222,7 +129,7 @@ namespace SandBoxApp
             if (arg.StartsWith("Env:", StringComparison.InvariantCultureIgnoreCase))
             {
                 var name = arg.Substring(4).Trim();
-                if (string.IsNullOrEmpty(name))
+                if (String.IsNullOrEmpty(name))
                     throw new ArgumentException($"{kind} argument is wrong");
 
                 // var ret = Environment.GetEnvironmentVariables();
