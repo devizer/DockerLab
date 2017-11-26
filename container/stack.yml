@@ -38,7 +38,7 @@ services:
         - "5432"
 
     postgres101:
-        image: postgres:10.1
+        image: postgres:9.6
         restart: "no"
         environment:
             POSTGRES_PASSWORD: postgres
