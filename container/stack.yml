@@ -12,6 +12,8 @@ services:
          - "mongodb"
          - "rabbitmq"
          - "sqlserver"
+        links:
+         - sqlserver
 
     mysql:
         image: mysql:5.5
