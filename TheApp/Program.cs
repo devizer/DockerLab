@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -29,10 +30,10 @@ namespace TheApp
         {
             bool help = false, nologo = false, isVer = false;
             var appVer = Assembly.GetEntryAssembly().GetName().Version.ToString();
-            int sleep = -1;
+            int timeout = -1;
             var p = new OptionSet(StringComparer.InvariantCultureIgnoreCase)
             {
-                {"Timeout=", "Timeout in seconds", v => Int32.TryParse(v, out sleep)},
+                {"Timeout=", "Timeout in seconds", v => Int32.TryParse(v, out timeout)},
                 {"MySQL=", "MySQL connection", v => Add(ConnectionFamily.MySQL, v)},
                 {"MSSQL=", "MS SQL connection", v => Add(ConnectionFamily.MSSQL, v)},
                 {"PostgreSQL=", "PostgreSQL connection", v => Add(ConnectionFamily.Postgres, v)},
@@ -44,7 +45,9 @@ namespace TheApp
                 {"n|nologo", "Hide logo", v => nologo = v != null}
             };
 
+
             p.Parse(args);
+            Model.Timeout = timeout;
 
             if (isVer)
             {
@@ -64,11 +67,94 @@ namespace TheApp
                 return 0;
             }
 
-            if (sleep > 0)
+            // Wait_Prev_Implementation();
+
+            StringBuilder startup = new StringBuilder("Waiting for network services:");
+            foreach (var m in Model.Connections)
             {
-                for (int i = 1; i <= sleep; i++)
+                startup.AppendLine();
+                startup.Append(Format(m.Family.ToString(), m.ConnectionString));
+            }
+
+            Console.WriteLine(startup + Environment.NewLine);
+
+            CountdownEvent done = new CountdownEvent(Model.Connections.Count);
+            foreach (ConnectionInfo info in Model.Connections)
+            {
+                var item = info;
+                ThreadPool.QueueUserWorkItem(_ =>
                 {
-                    Console.WriteLine("Sleeping " + i + "/" + sleep);
+                    while (true)
+                    {
+                        try
+                        {
+                            item.Version = SimpleVersionInfo.GetVersion(item.Family, item.ConnectionString);
+                            item.Exception = null;
+                            item.OkTime = Model.StartAt.ElapsedMilliseconds / 1000m;
+                            item.IsOk = true;
+                            InformNewStatus(item);
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            var exeptionDigest = ex.GetExeptionDigest();
+                            if (item.Family == ConnectionFamily.MongoDB)
+                                exeptionDigest = exeptionDigest.Split('\r', '\n').Select(x => x.Trim()).Where(x => x.Length > 0).FirstOrDefault();
+
+                            item.Exception = exeptionDigest;
+                        }
+
+                        if (Model.StartAt.Elapsed > TimeSpan.FromSeconds(Model.Timeout))
+                        {
+                            InformNewStatus(item);
+                            break;
+                        }
+
+                        Thread.Sleep(1000);
+                    }
+
+                    done.Signal();
+                });
+            }
+
+            if (Model.Timeout > 0)
+                ThreadPool.QueueUserWorkItem(_ =>
+                {
+                    Func<bool> isProgress = () => !done.WaitHandle.WaitOne(0);
+                    while (isProgress())
+                    {
+                        Thread.Sleep(2000);
+                        var secs = (int) Model.StartAt.Elapsed.TotalSeconds;
+                        if (isProgress())
+                            Console.WriteLine($"Waiting for dependencies ({secs} / {Model.Timeout})");
+                    }
+                });
+
+            done.Wait();
+
+            return 0;
+        }
+
+        private static void InformNewStatus(ConnectionInfo item)
+        {
+            var line1 = Format(item.Family.ToString(), $"{item.ConnectionString}");
+            string time = new DateTime(0).AddSeconds((double)item.OkTime).ToString("HH:mm:ss.f");
+            var line2 = Format("Version", item.Version + $" (in {item.OkTime.ToString("f1")} secs)");
+            if (item.Exception != null && item.Version == null)
+                line2 = Format("Exception", item.Exception);
+
+            string title = item.IsOk ? "Dependency is Ready!" : "Unable to connect to the dependency ;(";
+            Console.WriteLine("{0}{3}{0}{1}{0}{2}{0}", Environment.NewLine, line1, line2, title);
+        }
+
+        private static void Wait_Prev_Implementation()
+        {
+            var timeout = Model.Timeout;
+            if (timeout > 0)
+            {
+                for (int i = 1; i <= timeout; i++)
+                {
+                    Console.WriteLine("Sleeping " + i + "/" + timeout);
                     Thread.Sleep(1000);
                 }
             }
@@ -90,8 +176,6 @@ namespace TheApp
 
                 Console.WriteLine();
             }
-
-            return 0;
         }
 
         // Single Threaded only
@@ -111,6 +195,11 @@ namespace TheApp
         static void Write(string caption, string value)
         {
             Console.WriteLine(" " + (caption + " ").PadRight(16, '.') + " : " + value);
+        }
+
+        static string Format(string caption, string value)
+        {
+            return " " + (caption + " ").PadRight(16, '.') + " : " + value;
         }
 
         private static void WriteError(string caption, string value)
