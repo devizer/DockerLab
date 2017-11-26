@@ -8,5 +8,5 @@ ENTRYPOINT [ "./TheApp",  "-Timeout=180", \
  "-MongoDB=    mongodb://mongodb:27017", \
  "-RabbitMQ=   amqp://rabbitmq:5672", \
  "-Redis=      redis:6379", \
- "-MSSQL=      Data Source = sqlserver; User ID=sa; Password=~1qazxsw2; Timeout = 10" \
+ "-MSSQL=      Data Source = sqlserver,1433 ; User ID=sa; Password=~1qazxsw2; Timeout = 10" \
 ]
