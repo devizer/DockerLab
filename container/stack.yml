@@ -56,4 +56,9 @@ services:
             MSSQL_PID: Developer
         ports:
         - "1433"
-
+        depends_on:
+         - "mysql"
+         - "redis"
+         - "postgres"
+         - "mongodb"
+         - "rabbitmq"
