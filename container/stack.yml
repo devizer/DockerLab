@@ -9,7 +9,6 @@ services:
          - "mysql"
          - "redis"
          - "postgres"
-         - "pg2"
          - "mongodb"
          - "rabbitmq"
          - "sqlserver"
@@ -31,20 +30,12 @@ services:
         - "6379"
 
     postgres:
-        image: postgres:9.4
-        restart: "no"
-        environment:
-            POSTGRES_PASSWORD: postgres
-        ports:
-        - "5432"
-
-    pg2:
         image: postgres:10.1
         restart: "no"
         environment:
             POSTGRES_PASSWORD: postgres
         ports:
-        - "15432:5432"
+        - "5432"
 
     mongodb:
         image: mongo:3.4
