@@ -18,3 +18,4 @@ docker rmi -f vlad/theapp
 docker build -t vlad/theapp -f ./App.Dockerfile .
 docker run -it --rm vlad/theapp ./TheApp --help
 
+docker-compose -f stack.yml up
