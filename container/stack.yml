@@ -9,6 +9,7 @@ services:
          - "mysql"
          - "redis"
          - "postgres"
+         - "pg2"
          - "mongodb"
          - "rabbitmq"
          - "sqlserver"
@@ -37,8 +38,8 @@ services:
         ports:
         - "5432"
 
-    postgres101:
-        image: postgres:9.6
+    pg2:
+        image: postgres:10.1
         restart: "no"
         environment:
             POSTGRES_PASSWORD: postgres
