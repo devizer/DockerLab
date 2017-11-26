@@ -15,12 +15,18 @@ services:
         restart: always
         environment:
             MYSQL_ROOT_PASSWORD: example
+        ports:
+        - "3306"
 
     redis:
         image: redis
         restart: always
+        ports:
+        - "6379"
 
     postgres:
         image: postgres
         restart: always
+        ports:
+        - "5432"
 
