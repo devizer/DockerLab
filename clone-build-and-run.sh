@@ -16,7 +16,7 @@ cd bin/linux
 cp ../../../container/* .
 docker rmi -f vlad/theapp
 docker rm -f $(docker ps -a -q)
-docker build -t vlad/theapp -f ./App.Dockerfile .
+docker build -t vlad/theapp -f ./Dockerfile .
 
 # docker run -t --rm vlad/theapp ./TheApp --help
 # docker run -t --rm vlad/theapp ./TheApp
