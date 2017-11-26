@@ -4,10 +4,10 @@ COPY . /app
 ENTRYPOINT [ "./TheApp", "-Timeout=120" ]
 
 # ENTRYPOINT [ "./TheApp",  "-Timeout=120", \
- "-MySQL=      Server = mysql; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5", \
- "-PostgreSQL= Host = postgres; Port=5432; User ID=postgres; Password=postgres; Database=postgres; Timeout = 5", \
- "-MongoDB=    mongodb://mongodb:27017", \
- "-RabbitMQ=   amqp://rabbitmq:5672", \
- "-Redis=      redis:6379", \
- "-MSSQL=      Data Source = sqlserver ; User ID=sa; Password=~1qazxsw2; Timeout = 5" \
-]
+#    "-MySQL=      Server = mysql; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5", \
+#    "-PostgreSQL= Host = postgres; Port=5432; User ID=postgres; Password=postgres; Database=postgres; Timeout = 5", \
+#    "-MongoDB=    mongodb://mongodb:27017", \
+#    "-RabbitMQ=   amqp://rabbitmq:5672", \
+#    "-Redis=      redis:6379", \
+#    "-MSSQL=      Data Source = sqlserver ; User ID=sa; Password=~1qazxsw2; Timeout = 5" \
+# ]
