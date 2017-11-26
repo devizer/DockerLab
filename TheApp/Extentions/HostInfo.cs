@@ -154,5 +154,4 @@ namespace MongoDB.Profiler
         }
 
     }
-
 }

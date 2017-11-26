@@ -1,8 +1,8 @@
 #!/bin/bash
 work=$HOME/build
-mkdir -p $work; cd $work
+mkdir -p $work; rm -rf $work/DockerLab; cd $work
 git clone https://github.com/devizer/DockerLab
-cd DockerLab
+cd DockerLab/TheApp
 dotnet publish -v:n -c Debug -r linux-x64 -o bin/linux
 cd bin/linux
 ./TheApp \

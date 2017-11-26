@@ -63,7 +63,7 @@ namespace SandBoxApp
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
+                    Write("Exveption", ex.GetExeptionDigest());
 
                 }
                 Console.WriteLine();
