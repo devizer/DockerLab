@@ -44,6 +44,7 @@ namespace TheApp
 
             p.Parse(args);
             Model.Timeout = timeout;
+            PopulateTargetsByEnv();
 
             if (needVer)
             {
@@ -73,7 +74,6 @@ namespace TheApp
             }
 
             Console.WriteLine(startup + Environment.NewLine);
-            PopulateTargetsByEnv();
 
             CountdownEvent done = new CountdownEvent(Model.Connections.Count);
             foreach (ConnectionInfo infoCopy in Model.Connections)
