@@ -37,6 +37,14 @@ services:
         ports:
         - "5432"
 
+    postgres101:
+        image: postgres:10.1
+        restart: "no"
+        environment:
+            POSTGRES_PASSWORD: postgres
+        ports:
+        - "5433"
+
     mongodb:
         image: mongo:3.4
         restart: "no"
@@ -58,9 +66,3 @@ services:
             MSSQL_PID: Developer
         ports:
         - "1433"
-        depends_on:
-         - "mysql"
-         - "redis"
-         - "postgres"
-         - "mongodb"
-         - "rabbitmq"

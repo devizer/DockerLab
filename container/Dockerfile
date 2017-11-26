@@ -5,6 +5,7 @@ COPY . /app
 ENTRYPOINT [ "./TheApp",  "-Timeout=180", \
  "-MySQL=      Server = mysql; Port=3306; Uid = root; Pwd = example; Connect Timeout = 10", \
  "-PostgreSQL= Host = postgres; Port=5432; User ID=postgres; Password=postgres; Database=postgres; Timeout = 5", \
+ "-PostgreSQL= Host = postgres101; Port=5433; User ID=postgres; Password=postgres; Database=postgres; Timeout = 5", \
  "-MongoDB=    mongodb://mongodb:27017", \
  "-RabbitMQ=   amqp://rabbitmq:5672", \
  "-Redis=      redis:6379", \
