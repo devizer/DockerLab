@@ -133,6 +133,19 @@ namespace TheApp
 
             done.Wait();
 
+            StringBuilder final = new StringBuilder("WaitFor final report:");
+            foreach (var item in Model.Connections)
+            {
+                var line1 = Format(item.Family.ToString(), $"{item.ConnectionString}");
+                var line2 = Format("Version", item.Version + $" (in {item.OkTime.ToString("f1")} secs)");
+                if (item.Exception != null && item.Version == null)
+                    line2 = Format("Exception", item.Exception);
+
+                final.AppendFormat("{0}{1}{0}{2}{0}", Environment.NewLine, line1, line2);
+            }
+
+            Console.WriteLine(final + Environment.NewLine);
+
             return 0;
         }
 
