@@ -79,7 +79,7 @@ namespace TheApp
             foreach (ConnectionInfo infoCopy in Model.Connections)
             {
                 var info = infoCopy;
-                ThreadPool.QueueUserWorkItem(_ =>
+                Thread thread = new Thread(() =>
                 {
                     while (true)
                     {
@@ -112,7 +112,10 @@ namespace TheApp
                     }
 
                     done.Signal();
-                });
+
+                }) { IsBackground = true };
+
+                thread.Start();
             }
 
             if (Model.Timeout > 0)

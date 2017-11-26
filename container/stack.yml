@@ -25,7 +25,7 @@ services:
             WAIT_FOR_MongoDB_42: "mongodb://mongodb:27017"
             WAIT_FOR_RabbitMQ_42: "amqp://rabbitmq:5672"
             WAIT_FOR_Redis_42: "redis:6379"
-            WAIT_FOR_MSSQL_42: "Data Source = sqlserver ; User ID=sa; Password = ~1qazxsw2; Timeout = 5"
+            WAIT_FOR_MSSQL_42: "Data Source=sqlserver; User ID=sa; Password=~1qazxsw2; Timeout = 5"
 
     mysql:
         image: mysql:latest
