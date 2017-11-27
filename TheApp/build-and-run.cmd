@@ -1,8 +1,8 @@
-dotnet publish -v:m -c Debug -o bin\output
+dotnet publish -v:m -c Debug -o bin\output TheApp.sln
 pushd bin\output
 dotnet TheApp.dll --help
 net start mssql$sql2005 1>nul 2>&1
-dotnet TheApp.dll ^
+dotnet WaitFor.dll -Timeout=9 ^
  "-MySQL=      Server = 192.168.0.8; Port=3306; Uid = mysql; Pwd = mysql; " ^
  "-MySQL=      Server = 192.168.0.8; Port=3307; Uid = root; Pwd = example; " ^
  "-MSSQL=      Data Source = (local)\SQL2005; Integrated Security=true;" ^

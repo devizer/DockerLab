@@ -1,10 +1,10 @@
 FROM microsoft/dotnet:2.0.3-runtime-deps-jessie
 WORKDIR /app
 COPY . /app
-ENTRYPOINT [ "./TheApp", "-Timeout=160" ]
+ENTRYPOINT [ "./WaitFor", "-Timeout=150" ]
 # ENTRYPOINT bash -c 'printenv | sort'
 
-# ENTRYPOINT [ "./TheApp",  "-Timeout=120", \
+# ENTRYPOINT [ "./WaitFor",  "-Timeout=120", \
 #    "-MySQL=      Server = mysql; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5", \
 #    "-PostgreSQL= Host = postgres; Port=5432; User ID=postgres; Password=postgres; Database=postgres; Timeout = 5", \
 #    "-MongoDB=    mongodb://mongodb:27017", \

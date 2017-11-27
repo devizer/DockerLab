@@ -33,7 +33,7 @@ services:
          - "mongodb"
          - "rabbitmq"
          - "sqlserver"
-#        links:
+#        links: [old version]
 #         - "mysql"
 #         - "redis"
 #         - "postgres"
