@@ -190,7 +190,7 @@ namespace TheApp
             var line1 = Format(item.Family.ToString(), $"{item.ConnectionString}");
             string time = new DateTime(0).AddSeconds((double) item.OkTime).ToString("HH:mm:ss.f");
             string caption = item.Family == ConnectionFamily.Ping || item.Family == ConnectionFamily.HttpGet ? "Status" : "Version";
-            var line2 = Format(caption, item.Version + $" (at the {OrdinalNumbers.AddOrdinal((int)item.OkTime)} second)");
+            var line2 = Format(caption, item.Version + $" (at the {OrdinalNumbers.AddOrdinal((int)Math.Ceiling(item.OkTime))} second)");
             if (item.Exception != null && item.Version == null)
                 line2 = Format("Exception", item.Exception);
 

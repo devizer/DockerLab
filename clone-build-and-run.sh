@@ -22,4 +22,4 @@ docker build -t vlad/theapp -f ./Dockerfile .
 # docker run -t --rm vlad/theapp ./TheApp
 
 docker-compose -f stack.yml down
-docker-compose -f stack.yml up | tee compuse-up.log
+docker-compose -f stack.yml up | tee compose-up.log

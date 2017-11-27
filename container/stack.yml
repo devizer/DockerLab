@@ -33,6 +33,7 @@ services:
          - "mongodb"
          - "rabbitmq"
          - "sqlserver"
+        command: "bash -c printenv;"
 
     mysql:
         image: mysql:5.5
