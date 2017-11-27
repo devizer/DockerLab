@@ -36,6 +36,7 @@ namespace TheApp
                 {"RabbitMQ=", "RabbitMQ connection", v => Add(ConnectionFamily.RabbitMQ, v)},
                 {"MongoDB=", "MongoDB Connection", v => Add(ConnectionFamily.MongoDB, v)},
                 {"Redis=", "Redis Connection", v => Add(ConnectionFamily.Redis, v)},
+                {"Ping=", "Host or ip address", v => Add(ConnectionFamily.Ping, v)},
                 {"v|Version", "Show version", v => needVer = true},
                 {"h|?|Help", "Display this help", v => needHelp = v != null},
                 {"n|nologo", "Hide logo", v => needLogo = v != null}

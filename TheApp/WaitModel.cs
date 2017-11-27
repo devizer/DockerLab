@@ -13,7 +13,8 @@ namespace TheApp
         Postgres,
         RabbitMQ,
         MongoDB,
-        Redis
+        Redis,
+        Ping,
     }
 
     public class WaitModel

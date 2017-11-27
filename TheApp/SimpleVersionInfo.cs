@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using Dapper;
 using MongoDB.Driver;
@@ -38,12 +41,29 @@ namespace TheApp
                 case ConnectionFamily.RabbitMQ:
                     return GoRabbitMQ(connectionString);
 
+                case ConnectionFamily.Ping:
+                    return GoPing(connectionString);
+
                 default:
                     throw new ArgumentOutOfRangeException($"Family {family} is not valid argument");
 
             }
         }
 
+        private static string GoPing(string connectionString)
+        {
+            byte[] buffer = Enumerable.Repeat((byte)42, 32).ToArray();
+
+            int timeout = 2000;
+
+            PingOptions options = new PingOptions(64, false);
+            Ping pingSender = new Ping();
+
+            Stopwatch sw = Stopwatch.StartNew();
+            pingSender.Send(connectionString, timeout, buffer, options);
+            var msecs = sw.ElapsedTicks / Convert.ToDecimal(Stopwatch.Frequency);
+            return $"OK. {msecs:f2} msecs";
+        }
 
 
         private static string GoMSSQL(string cs)
