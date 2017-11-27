@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -158,15 +159,17 @@ namespace TheApp
         {
             var families = Enum.GetValues(typeof(ConnectionFamily)).Cast<ConnectionFamily>().ToArray();
             IDictionary all = Environment.GetEnvironmentVariables();
-            foreach (object keyRaw in all.Keys)
+            var allKeys = all.Keys.OfType<object>().ToArray();
+            foreach (object keyRaw in allKeys)
             {
                 var key = Convert.ToString(keyRaw);
+                // if (Debugger.IsAttached && key.ToLower().IndexOf("google") >= 0) Debugger.Break();
                 if (!key.StartsWith(EnvPrefix, StringComparison.InvariantCultureIgnoreCase))
                     continue;
 
                 foreach (var fam in families)
                 {
-                    if (key.StartsWith(EnvPrefix + fam, StringComparison.CurrentCultureIgnoreCase))
+                    if (key.StartsWith(EnvPrefix + fam, StringComparison.InvariantCultureIgnoreCase))
                     {
                         Add(fam, Convert.ToString(all[key]));
                     }
