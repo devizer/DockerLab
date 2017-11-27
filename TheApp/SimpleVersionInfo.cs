@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Text;
 using Dapper;
@@ -44,10 +45,31 @@ namespace TheApp
                 case ConnectionFamily.Ping:
                     return GoPing(connectionString);
 
+                case ConnectionFamily.HttpGet:
+                    return GoHttpsGet(connectionString);
+
                 default:
                     throw new ArgumentOutOfRangeException($"Family {family} is not valid argument");
 
             }
+        }
+
+        private static string GoHttpsGet(string connectionString)
+        {
+            Stopwatch startAt = Stopwatch.StartNew();
+            HttpClient c = new HttpClient();
+            var response = c.GetAsync(connectionString).Result;
+            var statusCode = response.StatusCode;
+            var bytes = response.Content.ReadAsByteArrayAsync().Result;
+            return $"{statusCode} ({(int)statusCode}). {bytes.Length} bytes recieved";
+        }
+
+        private static string GoHttpsGet_Strict(string connectionString)
+        {
+            Stopwatch startAt = Stopwatch.StartNew();
+            HttpClient c = new HttpClient();
+            var bytes = c.GetByteArrayAsync(connectionString).Result;
+            return $"OK. {bytes.Length} bytes recieved";
         }
 
         private static string GoPing(string connectionString)

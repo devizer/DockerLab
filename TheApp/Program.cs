@@ -37,6 +37,7 @@ namespace TheApp
                 {"MongoDB=", "MongoDB Connection", v => Add(ConnectionFamily.MongoDB, v)},
                 {"Redis=", "Redis Connection", v => Add(ConnectionFamily.Redis, v)},
                 {"Ping=", "Host or ip address", v => Add(ConnectionFamily.Ping, v)},
+                {"HttpGet=", "https(s)://host:port/path", v => Add(ConnectionFamily.HttpGet, v)},
                 {"v|Version", "Show version", v => needVer = true},
                 {"h|?|Help", "Display this help", v => needHelp = v != null},
                 {"n|nologo", "Hide logo", v => needLogo = v != null}
@@ -185,7 +186,7 @@ namespace TheApp
         {
             var line1 = Format(item.Family.ToString(), $"{item.ConnectionString}");
             string time = new DateTime(0).AddSeconds((double) item.OkTime).ToString("HH:mm:ss.f");
-            string caption = item.Family == ConnectionFamily.Ping ? "Status" : "Version";
+            string caption = item.Family == ConnectionFamily.Ping || item.Family == ConnectionFamily.HttpGet ? "Status" : "Version";
             var line2 = Format(caption, item.Version + $" (in {item.OkTime.ToString("f1")} secs)");
             if (item.Exception != null && item.Version == null)
                 line2 = Format("Exception", item.Exception);

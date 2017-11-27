@@ -15,6 +15,7 @@ namespace TheApp
         MongoDB,
         Redis,
         Ping,
+        HttpGet
     }
 
     public class WaitModel
