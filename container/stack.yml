@@ -60,7 +60,7 @@ services:
         - "27017"
 
     rabbitmq:
-        image: rabbitmq:3.2
+        image: rabbitmq:3.4
         restart: "no"
         ports:
         - "5672"
