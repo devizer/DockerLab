@@ -25,5 +25,5 @@ docker build -t vlad/theapp -f ./Dockerfile .
 # docker run -t --rm vlad/theapp ./TheApp
 
 export COMPOSE_HTTP_TIMEOUT=61
-docker-compose -f stack.yml down
+# docker-compose -f stack.yml down
 docker-compose -f stack.yml up | tee compose-up.log

@@ -6,15 +6,19 @@ services:
     theapp:
         image: vlad/theapp
         environment:
-            WAIT_FOR_MySQL_42: "Server = mysql; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5"
+            WAIT_FOR_MySQL_1: "Server = mysql; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5"
+            WAIT_FOR_MySQL_2: "Server = mysql; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5"
             WAIT_FOR_PostgreSQL: "Host = postgres; Port=5432; User ID=postgres; Password=postgres; Database=postgres; Timeout = 5"
-            WAIT_FOR_MongoDB_42: "mongodb://mongodb:27017"
+            WAIT_FOR_MongoDB: "mongodb://mongodb:27017"
             WAIT_FOR_RabbitMQ: "amqp://rabbitmq:5672"
-            WAIT_FOR_Redis_42: "redis:6379"
-            WAIT_FOR_MSSQL_42: "Data Source=sqlserver; User ID=sa; Password=~1qazxsw2; Timeout = 5"
-            WAIT_FOR_HttpGet_nginx: "http://nginx"
+            WAIT_FOR_Redis: "redis:6379"
+            WAIT_FOR_MSSQL: "Data Source=sqlserver; User ID=sa; Password=~1qazxsw2; Timeout = 5"
             WAIT_FOR_HttpGet_google: "https://google.com"
             WAIT_FOR_HttpGet_google_404: "https://google.com/404"
+            WAIT_FOR_Ping_nginx1: "nginx1"
+            WAIT_FOR_Ping_nginx2: "nginx2"
+            WAIT_FOR_HttpGet_nginx: "http://nginx1"
+            WAIT_FOR_HttpGet_nginx: "http://nginx2"
             WAIT_FOR_Ping_google: "google.com"
             WAIT_FOR_Ping_sqlserver: "sqlserver"
             WAIT_FOR_Ping_redis: "redis"
@@ -33,7 +37,6 @@ services:
          - "mongodb"
          - "rabbitmq"
          - "sqlserver"
-        command: "bash -c printenv;"
 
     mysql:
         image: mysql:5.5
@@ -79,8 +82,14 @@ services:
         ports:
         - "1433"
 
-    nginx:
+    nginx1:
         image: nginx
         ports:
-        - "8099:80"
+        - "8091:80"
+        command: [nginx-debug, '-g', 'daemon off;']
+
+    nginx2:
+        image: nginx
+        ports:
+        - "8092:80"
         command: [nginx-debug, '-g', 'daemon off;']
