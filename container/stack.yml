@@ -12,6 +12,7 @@ services:
             WAIT_FOR_MongoDB: "mongodb://mongodb:27017"
             WAIT_FOR_RabbitMQ: "amqp://rabbitmq:5672"
             WAIT_FOR_Redis: "redis:6379"
+            WAIT_FOR_Redis: "redis_another:6378"
             WAIT_FOR_MSSQL: "Data Source=sqlserver; User ID=sa; Password=~1qazxsw2; Timeout = 5"
             WAIT_FOR_HttpGet_google: "https://google.com"
             WAIT_FOR_HttpGet_google_404: "https://google.com/404"
