@@ -1,7 +1,7 @@
 FROM microsoft/dotnet:2.0.3-runtime-deps-jessie
 WORKDIR /app
 COPY . /app
-ENTRYPOINT [ "./TheApp", "-Timeout=120" ]
+ENTRYPOINT [ "./TheApp", "-Timeout=160" ]
 # ENTRYPOINT bash -c 'printenv | sort'
 
 # ENTRYPOINT [ "./TheApp",  "-Timeout=120", \

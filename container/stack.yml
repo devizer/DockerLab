@@ -7,12 +7,12 @@ services:
         image: vlad/theapp
         environment:
             WAIT_FOR_MySQL: "Server = mysql; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5"
-            WAIT_FOR_MySQL_2: "Server = mysql_another; Port=3305; Uid = root; Pwd = example; Connect Timeout = 5"
+            WAIT_FOR_MySQL_2: "Server = mysql_another; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5"
             WAIT_FOR_PostgreSQL: "Host = postgres; Port=5432; User ID=postgres; Password=postgres; Database=postgres; Timeout = 5"
             WAIT_FOR_MongoDB: "mongodb://mongodb:27017"
             WAIT_FOR_RabbitMQ: "amqp://rabbitmq:5672"
             WAIT_FOR_Redis: "redis:6379"
-            WAIT_FOR_Redis_another: "redis_another:6378"
+            WAIT_FOR_Redis_another: "redis_another:6379"
             WAIT_FOR_MSSQL: "Data Source=sqlserver; User ID=sa; Password=~1qazxsw2; Timeout = 5"
             WAIT_FOR_HttpGet_google: "https://google.com"
             WAIT_FOR_HttpGet_google_404: "https://google.com/404"
