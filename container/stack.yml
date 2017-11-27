@@ -46,8 +46,10 @@ services:
         restart: "no"
         environment:
             MYSQL_ROOT_PASSWORD: example
+        volumes:
+         - "./my.custom.cnf:/etc/mysql/conf.d/my.custom.cnf"
         ports:
-        - "3306:3306"
+         - "3306:3306"
 
     mysql_another:
         image: mysql:5.6
@@ -55,7 +57,7 @@ services:
         environment:
             MYSQL_ROOT_PASSWORD: example
         ports:
-        - "3305:3306"
+         - "3305:3306"
 
     redis:
         image: redis

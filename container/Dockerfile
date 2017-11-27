@@ -1,6 +1,6 @@
 FROM microsoft/dotnet:2.0.3-runtime-deps-jessie
-WORKDIR /app
-COPY . /app
+WORKDIR /WaitFor
+COPY . /WaitFor
 ENTRYPOINT [ "./WaitFor", "-Timeout=150" ]
 # ENTRYPOINT bash -c 'printenv | sort'
 
