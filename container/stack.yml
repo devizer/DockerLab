@@ -16,6 +16,7 @@ services:
             WAIT_FOR_Ping_sqlserver: "sqlserver"
             WAIT_FOR_Ping_redis: "redis"
             WAIT_FOR_Ping_nongodb: "mongodb"
+            NO_WIAT_FOR_HTTPGET_nginx: "http://nginx"
         depends_on:
          - "mysql"
          - "redis"
@@ -75,12 +76,8 @@ services:
         ports:
         - "1433"
 
-    visualizer:
-        image: dockersamples/visualizer:stable
+    nginx:
+        image: nginx
         ports:
-          - "8080:8080"
-        volumes:
-          - "/var/run/docker.sock:/var/run/docker.sock"
-        deploy:
-          placement:
-            constraints: [node.role == manager]
+        - "8099:80"
+        command: [nginx-debug, '-g', 'daemon off;']
