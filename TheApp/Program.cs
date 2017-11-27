@@ -144,12 +144,8 @@ namespace TheApp
 
             foreach (var item in sorted)
             {
-                var line1 = Format(item.Family.ToString(), $"{item.ConnectionString}");
-                var line2 = Format("Version", item.Version + $" (in {item.OkTime.ToString("f1")} secs)");
-                if (item.Exception != null && item.Version == null)
-                    line2 = Format("Exception", item.Exception);
-
-                final.AppendFormat("{0}{1}{0}{2}{0}", Environment.NewLine, line1, line2);
+                var lineReport = GetItemReport(item);
+                final.AppendFormat("{0}{1}{0}", Environment.NewLine, lineReport);
             }
 
             Console.WriteLine(final + Environment.NewLine);
@@ -179,14 +175,23 @@ namespace TheApp
 
         private static void InformNewStatus(ConnectionInfo item)
         {
+            var report = GetItemReport(item);
+
+            string title = item.IsOk ? "Dependency is Ready!" : "Unable to connect to the dependency ;(";
+            Console.WriteLine("{0}{1}{0}{2}{0}", Environment.NewLine, title, report);
+        }
+
+        private static string GetItemReport(ConnectionInfo item)
+        {
             var line1 = Format(item.Family.ToString(), $"{item.ConnectionString}");
-            string time = new DateTime(0).AddSeconds((double)item.OkTime).ToString("HH:mm:ss.f");
-            var line2 = Format("Version", item.Version + $" (in {item.OkTime.ToString("f1")} secs)");
+            string time = new DateTime(0).AddSeconds((double) item.OkTime).ToString("HH:mm:ss.f");
+            string caption = item.Family == ConnectionFamily.Ping ? "Status" : "Version";
+            var line2 = Format(caption, item.Version + $" (in {item.OkTime.ToString("f1")} secs)");
             if (item.Exception != null && item.Version == null)
                 line2 = Format("Exception", item.Exception);
 
-            string title = item.IsOk ? "Dependency is Ready!" : "Unable to connect to the dependency ;(";
-            Console.WriteLine("{0}{3}{0}{1}{0}{2}{0}", Environment.NewLine, line1, line2, title);
+            string ret = line1 + Environment.NewLine + line2;
+            return ret;
         }
 
         private static void Wait_Prev_Implementation()

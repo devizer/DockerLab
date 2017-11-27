@@ -14,8 +14,8 @@ services:
             WAIT_FOR_MSSQL_42: "Data Source=sqlserver; User ID=sa; Password=~1qazxsw2; Timeout = 5"
             WAIT_FOR_Ping_google: "google.com"
             WAIT_FOR_Ping_sqlserver: "sqlserver"
-            WAIT_FOR_Ping_sqlserver: "redis"
-            WAIT_FOR_Ping_sqlserver: "mongodb"
+            WAIT_FOR_Ping_redis: "redis"
+            WAIT_FOR_Ping_nongodb: "mongodb"
         depends_on:
          - "mysql"
          - "redis"
