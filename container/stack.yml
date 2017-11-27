@@ -16,9 +16,9 @@ services:
             WAIT_FOR_Ping_sqlserver: "sqlserver"
             WAIT_FOR_Ping_redis: "redis"
             WAIT_FOR_Ping_mongodb: "mongodb"
-            WIAT_FOR_HTTPGET_nginx: "http://nginx"
-            WIAT_FOR_HTTPGET_google: "https://google.com"
-            WIAT_FOR_HTTPGET_google_404: "https://google.com/404"
+            WIAT_FOR_HttpGet_nginx: "http://nginx"
+            WIAT_FOR_HttpGet_google: "https://google.com"
+            WIAT_FOR_HttpGet_google_404: "https://google.com/404"
         depends_on:
          - "mysql"
          - "redis"
