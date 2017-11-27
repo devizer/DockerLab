@@ -54,9 +54,19 @@ namespace TheApp
         {
             byte[] buffer = Enumerable.Repeat((byte)42, 32).ToArray();
 
+            PingOptions options = new PingOptions(64, false);
+
+            try
+            {
+                Ping p = new Ping();
+                p.Send("localhost", 2, buffer, options);
+            }
+            catch
+            {
+            }
+
             int timeout = 2000;
 
-            PingOptions options = new PingOptions(64, false);
             Ping pingSender = new Ping();
 
             Stopwatch sw = Stopwatch.StartNew();
