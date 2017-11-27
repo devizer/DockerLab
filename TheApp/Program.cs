@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using MongoDB.Profiler;
 using NDesk.Options;
+using TheApp.Extentions;
 
 namespace TheApp
 {

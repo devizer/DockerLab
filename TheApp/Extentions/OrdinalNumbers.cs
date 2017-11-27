@@ -1,4 +1,4 @@
-﻿namespace MongoDB.Profiler
+﻿namespace TheApp.Extentions
 {
     public static class OrdinalNumbers
     {
