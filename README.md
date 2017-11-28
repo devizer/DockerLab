@@ -1,4 +1,4 @@
-## DockerLab
+## DockerLab [![Build Status](https://travis-ci.org/devizer/DockerLab.svg?branch=master)](https://travis-ci.org/devizer/DockerLab)
 
 Here is a proof-of-concept for test-environment of an app with composed dbs (MS SQL, MySQL, PostreSQL, Redis, RabbitMQ, MongoDB)
 
