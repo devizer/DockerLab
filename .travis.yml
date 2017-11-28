@@ -16,4 +16,6 @@ script:
  - docker build -t vlad/theapp -f ./Dockerfile .
  - export COMPOSE_HTTP_TIMEOUT=61
  - time (docker-compose -f stack.yml create) 
- - docker-compose -f stack.yml up
+ - docker-compose -f stack.yml up -d
+ - docker start -i linux_theapp_1;
+ - docker-compose -f stack.yml down
