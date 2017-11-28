@@ -8,7 +8,7 @@ cd bin/linux
 
 cp ../../../container/* .
 docker rmi -f vlad/theapp
-# docker rm -f $(docker ps -a -q)
+docker rm -f $(docker ps -a -q)
 docker build -t vlad/theapp -f ./Dockerfile .
 
 export COMPOSE_HTTP_TIMEOUT=61
