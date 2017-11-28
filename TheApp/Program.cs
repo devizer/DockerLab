@@ -10,6 +10,7 @@ using System.Threading;
 using MongoDB.Profiler;
 using NDesk.Options;
 using TheApp.Extentions;
+using Universe;
 
 namespace TheApp
 {
@@ -28,6 +29,10 @@ namespace TheApp
         {
             bool needHelp = false, needLogo = false, needVer = false;
             var appVer = Assembly.GetEntryAssembly().GetName().Version.ToString();
+            var date = AssemblyBuildDateTimeAttribute.CallerUtcBuildDate;
+            if (date.HasValue && date.Value.Year > 2000)
+                appVer += $" (built at {date.Value})";
+
             int timeout = -1;
             var p = new OptionSet(StringComparer.InvariantCultureIgnoreCase)
             {
