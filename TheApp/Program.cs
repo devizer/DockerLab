@@ -145,20 +145,18 @@ namespace TheApp
 
             done.Wait();
 
-            StringBuilder final = new StringBuilder("WaitFor final report:");
             var sorted = Model.Connections
                 .OrderBy(x => !x.IsOk)
                 .ThenBy(x => x.OkTime)
                 .ThenBy(x => x.Family)
                 .ThenBy(x => x.ConnectionString);
 
+            Console.WriteLine("WaitFor's final report:");
             foreach (var item in sorted)
             {
-                var lineReport = GetItemReport(item);
-                final.AppendFormat("{0}{1}{0}", Environment.NewLine, lineReport);
+                GetItemReport(item);
             }
 
-            Console.WriteLine(final + Environment.NewLine);
 
             return 0;
         }
@@ -190,25 +188,62 @@ namespace TheApp
             }
         }
 
+        static readonly object SyncWrite = new object();
         private static void InformNewStatus(ConnectionInfo item)
         {
-            var report = GetItemReport(item);
-
-            string title = item.IsOk ? "Dependency is Ready!" : "Unable to connect to the dependency ;(";
-            Console.WriteLine("{0}{1}{0}{2}{0}", Environment.NewLine, title, report);
+            lock (SyncWrite)
+            {
+                string title = item.IsOk ? "Dependency is Ready!" : "Unable to connect to the dependency ;(";
+                Console.WriteLine(title);
+                GetItemReport(item);
+            }
         }
 
-        private static string GetItemReport(ConnectionInfo item)
+        private static void GetItemReport(ConnectionInfo item)
         {
-            var line1 = Format(item.Family.ToString(), $"{item.ConnectionString}");
-            string time = new DateTime(0).AddSeconds((double) item.OkTime).ToString("HH:mm:ss.f");
-            string caption = item.Family == ConnectionFamily.Ping || item.Family == ConnectionFamily.HttpGet ? "Status" : "Version";
-            var line2 = Format(caption, item.Version + $" (at the {OrdinalNumbers.AddOrdinal((int)Math.Ceiling(item.OkTime))} second)");
-            if (item.Exception != null && item.Version == null)
-                line2 = Format("Exception", item.Exception);
+            const int captionLength = 16;
+            var fore = Console.ForegroundColor;
 
-            string ret = line1 + Environment.NewLine + line2;
-            return ret;
+            string caption2 = item.Family == ConnectionFamily.Ping || item.Family == ConnectionFamily.HttpGet ? "Status" : "Version";
+            var time = $" (at the {OrdinalNumbers.AddOrdinal((int)Math.Ceiling(item.OkTime))} second)";
+            var lines = new[]
+            {
+                new
+                {
+                    t1 = item.Family.ToString(),
+                    c1 = ConsoleColor.Yellow,
+                    t2 = item.ConnectionString,
+                    c2 = fore,
+                },
+                new
+                {
+                    t1 = caption2,
+                    c1 = !item.IsOk ? ConsoleColor.Red : fore,
+                    t2 = item.IsOk ? (item.Version + time) : item.Exception,
+                    c2 = item.IsOk ? ConsoleColor.Green : ConsoleColor.Red
+                }
+            };
+
+            int n = 0;
+            foreach (var line in lines)
+            {
+                bool isLast = (++n) == lines.Length;
+                Console.Write(" ");
+                Console.ForegroundColor = line.c1;
+                Console.Write(line.t1);
+                Console.ForegroundColor = fore;
+                int padding = captionLength - line.t1.Length;
+                if (padding >= 1)
+                    Console.Write(new string('.', padding) + " : ");
+                else
+                    Console.Write(" : ");
+
+                Console.ForegroundColor = line.c2;
+                Console.Write(line.t2);
+                Console.ForegroundColor = fore;
+                Console.WriteLine(isLast ? Environment.NewLine : "");
+            }
+
         }
 
         private static void Wait_Prev_Implementation()
