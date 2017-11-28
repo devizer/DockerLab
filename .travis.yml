@@ -9,7 +9,7 @@ script:
  - docker info; printf "\n\n\n"; docker-compose version; printf "\n\n\n"
  - cd TheApp;
  - builddate=$(date --utc +"%a, %d %b %Y %T GMT"); 
- - echo "[assembly: Universe.AssemblyBuildDateTime(\"$builddate\")]" > Properties/AssemblyVersion.cs
+ - echo "[assembly: Universe.AssemblyBuildDateTime(\"$builddate\")]" | tee Properties/AssemblyVersion.cs
  - dotnet publish -v:m -c Debug -r linux-x64 -o bin/linux TheApp.sln
  - cd bin/linux
  - ./WaitFor -Timeout=5 -Ping=google.com -Ping=google.com42 -HttpGet=http://google.com -HttpGet=http://google.com/404
