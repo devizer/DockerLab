@@ -4,8 +4,8 @@ version: '3.1'
 services:
 
     theapp:
-#        image: vlad/theapp
         build: .
+        command: "-Timeout=150"
         environment:
             WAIT_FOR_MySQL: "Server = mysql; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5"
             WAIT_FOR_MySQL_2: "Server = mysql_another; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5"
