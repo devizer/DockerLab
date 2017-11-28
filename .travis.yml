@@ -3,5 +3,7 @@ mono: none
 dotnet: 2.0.3
 dist: trusty
 script:
- - dotnet restore TheApp/TheApp.sln
- - 
+ - cd TheApp;
+ - dotnet publish -v:m -c Debug -r linux-x64 -o bin/linux TheApp.sln
+ - cd bin/linux
+ - ./TheApp -Timeout=30 -Ping=google.com -Ping=google.com42 -HttpGet=http://google.com -HttpGet=http://google.com/404
