@@ -19,7 +19,7 @@ export WAIT_FOR_MySQL="Server = mysql1; Port=3306; Uid = root; Pwd = example; Co
 ```
 
 ## Root of this sandbox
-This [stack.yml](compose/stack.yml) is a compose/stack composition defenition
+This [stack.yml](container/stack.yml) is a compose/stack composition defenition
 
 ## report
 Below is a fragment of composition above:
