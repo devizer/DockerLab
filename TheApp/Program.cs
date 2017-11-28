@@ -167,14 +167,14 @@ namespace TheApp
                 var key = Convert.ToString(keyRaw);
                 // if (Debugger.IsAttached && key.ToLower().IndexOf("google") >= 0) Debugger.Break();
                 var isIt = key.StartsWith(EnvPrefix, StringComparison.InvariantCultureIgnoreCase);
-                Console.WriteLine($"{key}: {isIt}");
+                // Console.WriteLine($"{key}: {isIt}");
                 if (!isIt)
                     continue;
 
                 foreach (var fam in families)
                 {
                     var isItFamily = key.StartsWith(EnvPrefix + fam, StringComparison.InvariantCultureIgnoreCase);
-                    Console.WriteLine($"  - {fam}: {isItFamily}");
+                    // Console.WriteLine($"  - {fam}: {isItFamily}");
 
                     if (isItFamily)
                     {
