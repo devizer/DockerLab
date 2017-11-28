@@ -5,7 +5,7 @@ using System.Linq;
 namespace WaitFor.Common
 {
 
-    // ValidStatus=200,403; Uri=http://mywebapi:80/get-status; Method=POST; *Accept=application/json, text/javascript; Payload={'verbosity':'normal'}"
+    // Valid Status=200,403,100-499; Uri=http://mywebapi:80/get-status; Method=POST; *Accept=application/json, text/javascript; Payload={'verbosity':'normal'}"
     public class ConnectionStringParser
     {
         public readonly string ConnectionString;

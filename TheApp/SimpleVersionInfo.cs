@@ -74,7 +74,6 @@ namespace TheApp
 
         private static string GoHttpsGet_Strict(string connectionString)
         {
-            Stopwatch startAt = Stopwatch.StartNew();
             HttpClient c = new HttpClient();
             var bytes = c.GetByteArrayAsync(connectionString).Result;
             return $"OK. {bytes.Length} bytes recieved";
@@ -247,8 +246,6 @@ namespace TheApp
             MemcachedClientConfiguration config = new MemcachedClientConfiguration(nullLoggerFactory, opts);
             config.Servers.Add(ipEndPoint);
             config.Protocol = MemcachedProtocol.Binary;
-
-            
 
             // config.Authentication.Type = typeof(PlainTextAuthenticator);
             // config.Authentication.Parameters["userName"] = "demo";
