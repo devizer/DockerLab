@@ -1,7 +1,7 @@
 language: csharp
 mono: none
-dotnet: 2.0.0
+dotnet: 2.0.3
 dist: trusty
 script:
- - dotnet restore TheApp.sln
+ - dotnet restore TheApp/TheApp.sln
  - 
