@@ -15,6 +15,7 @@ services:
             WAIT_FOR_Redis: "redis:6379"
             WAIT_FOR_Redis_another: "redis_another:6379"
             WAIT_FOR_MSSQL: "Data Source=sqlserver; User ID=sa; Password=~1qazxsw2; Timeout = 5"
+            WAIT_FOR_Memcached: "memcached:11211"
             WAIT_FOR_HttpGet_google: "https://google.com"
             WAIT_FOR_HttpGet_google_404: "https://google.com/404"
             WAIT_FOR_HttpGet_adminer: "http://adminer:8080"
@@ -102,6 +103,12 @@ services:
             MSSQL_PID: Developer
         ports:
         - "1433"
+
+    memcached:
+        image: memcached
+        restart: "no"
+        ports:
+        - "11211"
 
     nginx1:
         image: nginx
