@@ -18,4 +18,5 @@ script:
  - time (docker-compose -f stack.yml create) 
  - docker-compose -f stack.yml up -d
  - (docker kill linux_theapp_1 >/dev/null || true); docker start -i linux_theapp_1;
+ - (docker kill linux_theapp_1 >/dev/null || true); docker start -i linux_theapp_1;
  - # docker-compose -f stack.yml down
