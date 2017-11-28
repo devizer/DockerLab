@@ -16,6 +16,7 @@ services:
             WAIT_FOR_MSSQL: "Data Source=sqlserver; User ID=sa; Password=~1qazxsw2; Timeout = 5"
             WAIT_FOR_HttpGet_google: "https://google.com"
             WAIT_FOR_HttpGet_google_404: "https://google.com/404"
+            WAIT_FOR_HttpGet_adminer: "https://adminer:8080"
             WAIT_FOR_Ping_nginx1: "nginx1"
             WAIT_FOR_Ping_nginx2: "nginx2"
             WAIT_FOR_HttpGet_nginx1: "http://nginx1"
@@ -112,3 +113,9 @@ services:
         ports:
         - "8092:80"
         command: [nginx-debug, '-g', 'daemon off;']
+
+    adminer:
+        image: adminer
+        restart: "no"
+        ports:
+        - "8080:8080"
