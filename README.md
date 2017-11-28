@@ -22,7 +22,7 @@ export WAIT_FOR_MySQL="Server = mysql1; Port=3306; Uid = root; Pwd = example; Co
 This [stack.yml](container/stack.yml) is a compose/stack composition defenition
 
 ## report
-Below is a fragment of composition above:
+Below is a fragment of `docker-compose up` with stack defenition above:
 ```
  Ping ........... : nginx
  Status ......... : OK. 0.02 msecs (at the 6th second)
