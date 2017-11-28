@@ -15,4 +15,5 @@ script:
  - cp ../../../container/* .
  - docker build -t vlad/theapp -f ./Dockerfile .
  - export COMPOSE_HTTP_TIMEOUT=61
- - docker-compose -f stack.yml up | tee compose-up.log
+ - time (docker-compose -f stack.yml create) 
+ - docker-compose -f stack.yml start
