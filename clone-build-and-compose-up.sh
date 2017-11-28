@@ -6,6 +6,7 @@ cd DockerLab/TheApp
 bash patch-build-date.sh
 dotnet publish -v:m -c Debug -r linux-x64 -o bin/linux TheApp.sln
 cd bin/linux
+./WaitFor -Timeout=3 -HttpGet=https://google.com/404
 
 cp ../../../container/* .
 docker rmi -f vlad/theapp
