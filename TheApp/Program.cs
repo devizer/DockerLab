@@ -31,7 +31,7 @@ namespace TheApp
             var appVer = Assembly.GetEntryAssembly().GetName().Version.ToString();
             var date = AssemblyBuildDateTimeAttribute.CallerUtcBuildDate;
             if (date.HasValue && date.Value.Year > 2000)
-                appVer += $" (built at {date.Value})";
+                appVer += $" (built at {date.Value} {TimeZoneInfo.Local.DisplayName})";
 
             int timeout = -1;
             var p = new OptionSet(StringComparer.InvariantCultureIgnoreCase)
