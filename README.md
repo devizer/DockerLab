@@ -14,8 +14,8 @@ It's a sandbox app which intended to check initialization of storage services. I
 `./WaitFor` app supports parameters via both command line and environment variobales. 
 This example will check two RDBMS server: SQLServer sqlserver1 and MySQL mysql1
 ```
-export WAIT_FOR_MySQL="Server = mysql1; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5"
-./WaitFor -Timeout=60 "-MSSQL=Data Source=sqlserver1; User ID=sa; Password=~1qazxsw2; Timeout = 5"
+export WAIT_FOR_MySQL="Server = mysql1; Port=3306; Uid = root; Pwd = your_password; Connect Timeout = 5"
+./WaitFor -Timeout=60 "-MSSQL=Data Source=sqlserver1; User ID=sa; Password=your_password; Timeout = 5"
 ```
 
 ## Root of this sandbox
