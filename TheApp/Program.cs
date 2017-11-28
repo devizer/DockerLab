@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
@@ -19,6 +20,9 @@ namespace TheApp
 
         public static WaitModel Model = new WaitModel();
         private static string EnvPrefix = "WAIT_FOR_";
+        static readonly object SyncWrite = new object();
+        private static readonly int CaptionWidth = 16;
+
 
         static int Main(string[] args)
         {
@@ -30,7 +34,6 @@ namespace TheApp
             bool needHelp = false, needLogo = false, needVer = false;
             var appVer = Assembly.GetEntryAssembly().GetName().Version.ToString();
             var date = AssemblyBuildDateTimeAttribute.CallerUtcBuildDate;
-            var tz = TimeZoneInfo.Local;
             if (date.HasValue && date.Value.Year > 2000)
                 appVer += $" (built at {date.Value}, {TimeZoneInfo.Local.DisplayName})";
 
@@ -154,11 +157,25 @@ namespace TheApp
             Console.WriteLine("WaitFor's final report:");
             foreach (var item in sorted)
             {
-                GetItemReport(item);
+                WriteItemReport(item);
             }
 
 
             return 0;
+        }
+
+        // Single Threaded only
+        static void Add(ConnectionFamily family, string connectionString)
+        {
+            Model.Connections.Add(new ConnectionInfo()
+            {
+                Family = family,
+                ConnectionString = connectionString.Trim(),
+                Exception = null,
+                IsOk = false,
+                OkTime = 0m,
+                Version = null,
+            });
         }
 
         static void PopulateTargetsByEnv()
@@ -188,39 +205,42 @@ namespace TheApp
             }
         }
 
-        static readonly object SyncWrite = new object();
+
         private static void InformNewStatus(ConnectionInfo item)
         {
             lock (SyncWrite)
             {
-                string title = item.IsOk ? "Dependency is Ready!" : "Unable to connect to the dependency ;(";
+                string title = item.IsOk ? "Progress moved forward. Dependency is Ready:" : "Unable to connect to the dependency ;(";
                 Console.WriteLine(title);
-                GetItemReport(item);
+                WriteItemReport(item);
             }
         }
 
-        private static void GetItemReport(ConnectionInfo item)
+        private static void WriteItemReport(ConnectionInfo item)
         {
             const int captionLength = 16;
             var fore = Console.ForegroundColor;
 
             string caption2 = item.Family == ConnectionFamily.Ping || item.Family == ConnectionFamily.HttpGet ? "Status" : "Version";
+            if (item.Exception != null) caption2 = "Exception";
             var time = $" (at the {OrdinalNumbers.AddOrdinal((int)Math.Ceiling(item.OkTime))} second)";
             var lines = new[]
             {
                 new
                 {
-                    t1 = item.Family.ToString(),
+                    t1 = item.Family + " ",
                     c1 = ConsoleColor.Yellow,
                     t2 = item.ConnectionString,
                     c2 = fore,
+                    c3 = fore,
                 },
                 new
                 {
-                    t1 = caption2,
+                    t1 = caption2 + " ",
                     c1 = !item.IsOk ? ConsoleColor.Red : fore,
                     t2 = item.IsOk ? (item.Version + time) : item.Exception,
-                    c2 = item.IsOk ? ConsoleColor.Green : ConsoleColor.Red
+                    c2 = item.IsOk ? ConsoleColor.Green : ConsoleColor.Red,
+                    c3 = item.IsOk ? fore : ConsoleColor.Red
                 }
             };
 
@@ -231,7 +251,7 @@ namespace TheApp
                 Console.Write(" ");
                 Console.ForegroundColor = line.c1;
                 Console.Write(line.t1);
-                Console.ForegroundColor = fore;
+                Console.ForegroundColor = line.c3;
                 int padding = captionLength - line.t1.Length;
                 if (padding >= 1)
                     Console.Write(new string('.', padding) + " : ");
@@ -246,66 +266,16 @@ namespace TheApp
 
         }
 
-        private static void Wait_Prev_Implementation()
-        {
-            var timeout = Model.Timeout;
-            if (timeout > 0)
-            {
-                for (int i = 1; i <= timeout; i++)
-                {
-                    Console.WriteLine("Sleeping " + i + "/" + timeout);
-                    Thread.Sleep(1000);
-                }
-            }
-
-            foreach (ConnectionInfo info in Model.Connections)
-            {
-                var item = info;
-                try
-                {
-                    var ver = SimpleVersionInfo.GetVersion(item.Family, item.ConnectionString);
-                    Write(item.Family.ToString(), item.ConnectionString);
-                    Write("Version", ver);
-                }
-                catch (Exception ex)
-                {
-                    Write(item.Family.ToString(), item.ConnectionString);
-                    WriteError("Exception", ex.GetExeptionDigest());
-                }
-
-                Console.WriteLine();
-            }
-        }
-
-        // Single Threaded only
-        static void Add(ConnectionFamily family, string connectionString)
-        {
-            Model.Connections.Add(new ConnectionInfo()
-            {
-                Family = family,
-                ConnectionString = connectionString.Trim(),
-                Exception = null,
-                IsOk = false,
-                OkTime = 0m,
-                Version = null,
-            });
-        }
-
-        static void Write(string caption, string value)
-        {
-            Console.WriteLine(" " + (caption + " ").PadRight(16, '.') + " : " + value);
-        }
-
         static string Format(string caption, string value)
         {
-            return " " + (caption + " ").PadRight(16, '.') + " : " + value;
+            return " " + (caption + " ").PadRight(CaptionWidth, '.') + " : " + value;
         }
 
-        private static void WriteError(string caption, string value)
+        private static void WriteError(string text)
         {
             var f = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(" " + (caption + " ").PadRight(16, '.') + " : " + value);
+            Console.WriteLine(text);
             Console.ForegroundColor = f;
         }
 
