@@ -38,7 +38,7 @@ namespace TheApp
                 {"RabbitMQ=", "RabbitMQ connection", v => Add(ConnectionFamily.RabbitMQ, v)},
                 {"MongoDB=", "MongoDB Connection", v => Add(ConnectionFamily.MongoDB, v)},
                 {"Redis=", "Redis Connection", v => Add(ConnectionFamily.Redis, v)},
-                {"Memcached=", "Memcached Connection (host:port)", v => Add(ConnectionFamily.Redis, v)},
+                {"Memcached=", "Memcached Connection", v => Add(ConnectionFamily.Memcached, v)},
                 {"Ping=", "Host or ip address", v => Add(ConnectionFamily.Ping, v)},
                 {"HttpGet=", "https(s)://host:port/path", v => Add(ConnectionFamily.HttpGet, v)},
                 {"v|Version", "Show version", v => needVer = true},
@@ -166,12 +166,17 @@ namespace TheApp
             {
                 var key = Convert.ToString(keyRaw);
                 // if (Debugger.IsAttached && key.ToLower().IndexOf("google") >= 0) Debugger.Break();
-                if (!key.StartsWith(EnvPrefix, StringComparison.InvariantCultureIgnoreCase))
+                var isIt = key.StartsWith(EnvPrefix, StringComparison.InvariantCultureIgnoreCase);
+                Console.WriteLine($"{key}: {isIt}");
+                if (!isIt)
                     continue;
 
                 foreach (var fam in families)
                 {
-                    if (key.StartsWith(EnvPrefix + fam, StringComparison.InvariantCultureIgnoreCase))
+                    var isItFamily = key.StartsWith(EnvPrefix + fam, StringComparison.InvariantCultureIgnoreCase);
+                    Console.WriteLine($"  - {fam}: {isItFamily}");
+
+                    if (isItFamily)
                     {
                         Add(fam, Convert.ToString(all[key]));
                     }
