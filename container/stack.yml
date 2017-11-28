@@ -47,7 +47,7 @@ services:
         environment:
             MYSQL_ROOT_PASSWORD: example
         volumes:
-         - "./my.custom.cnf:/etc/mysql/conf.d/my.custom.cnf"
+         - "./custom.cnf:/etc/mysql/conf.d/custom.cnf"
         ports:
          - "3306:3306"
 

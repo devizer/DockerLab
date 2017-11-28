@@ -7,7 +7,7 @@ dotnet publish -v:m -c Debug -r linux-x64 -o bin/linux TheApp.sln
 cd bin/linux
 
 function ignore_me_1 {
-./TheApp \
+./WaitFor \
  "-MySQL=      Server = 192.168.0.8; Port=3306; Uid = mysql; Pwd = mysql; " \
  '-MSSQL=      Data Source = (local)\SQL2005; Integrated Security=true; Timeout = 5;' \
  "-PostgreSQL= Host = 192.168.0.8; Port=5432; User ID=postgres; Password=postgres; Database=postgres;" \
