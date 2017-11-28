@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Text;
 using Dapper;
+using Enyim.Caching;
+using Enyim.Caching.Configuration;
+using Enyim.Caching.Memcached;
+using Microsoft.Extensions.Logging.Abstractions;
 using MongoDB.Driver;
 using MongoDB.Profiler;
 using MySql.Data.MySqlClient;
@@ -47,6 +52,9 @@ namespace TheApp
 
                 case ConnectionFamily.HttpGet:
                     return GoHttpsGet(connectionString);
+
+                case ConnectionFamily.Memcached:
+                    return GoMemcached(connectionString);
 
                 default:
                     throw new ArgumentOutOfRangeException($"Family {family} is not valid argument");
@@ -205,6 +213,63 @@ namespace TheApp
             con.Open();
             var ver = con.ExecuteScalar<string>("Select Version();");
             return ver;
+        }
+
+        private static string GoMemcached(string cs)
+        {
+
+            var parts = cs.Split(':');
+            var host = cs;
+            int port = 11211;
+            if (parts.Length == 2)
+            {
+                host = parts[0];
+                Int32.TryParse(parts[1], out port);
+            }
+
+            Func<IPAddress, int> order = ip => ip.ToString().IndexOf(".") >= 0 ? 1 : 2;
+            IPAddress address;
+            if (!IPAddress.TryParse(host, out address))
+            {
+                IPAddress[] resolved = Dns.GetHostAddresses(host);
+                var ordered = resolved.OrderBy(x => order(x)).ToArray();
+                address = ordered.FirstOrDefault();
+            }
+
+            if (address == null)
+                throw new ArgumentException($"Unable to resolve IP Address of {cs}");
+
+
+            MemcachedClientOptions opts = new MemcachedClientOptions();
+            opts.Protocol = MemcachedProtocol.Binary;
+            var ipEndPoint = new IPEndPoint(address, port);
+            var nullLoggerFactory = Microsoft.Extensions.Logging.Abstractions.NullLoggerFactory.Instance;
+            MemcachedClientConfiguration config = new MemcachedClientConfiguration(nullLoggerFactory, opts);
+            config.Servers.Add(ipEndPoint);
+            config.Protocol = MemcachedProtocol.Binary;
+
+            
+
+            // config.Authentication.Type = typeof(PlainTextAuthenticator);
+            // config.Authentication.Parameters["userName"] = "demo";
+            // config.Authentication.Parameters["password"] = "demo";
+
+            var mc = new MemcachedClient(nullLoggerFactory, config);
+            object result;
+            Stopwatch sw = Stopwatch.StartNew();
+            // return mc.Stats().GetVersion(ipEndPoint).ToString();
+            var stats = mc.Stats();
+            var rawVersion = stats.GetRaw("version");
+            var rawPointerSize = stats.GetRaw("pointer_size");
+            var version = rawVersion.FirstOrDefault().Value ?? "N/A";
+            var pointerSize = rawPointerSize.FirstOrDefault().Value;
+            if (!string.IsNullOrEmpty(pointerSize))
+                version += $" [{pointerSize} bits]";
+
+            return version;
+
+            mc.Get($"PING_({Guid.NewGuid().ToString("N")})");
+            return "OK. TryGet took " + (sw.ElapsedTicks / Convert.ToDecimal(Stopwatch.Frequency)).ToString("f2") + " msec";
         }
     }
 }

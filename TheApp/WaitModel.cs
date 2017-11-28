@@ -14,6 +14,7 @@ namespace TheApp
         RabbitMQ,
         MongoDB,
         Redis,
+        Memcached,
         Ping,
         HttpGet
     }

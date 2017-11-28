@@ -38,6 +38,7 @@ namespace TheApp
                 {"RabbitMQ=", "RabbitMQ connection", v => Add(ConnectionFamily.RabbitMQ, v)},
                 {"MongoDB=", "MongoDB Connection", v => Add(ConnectionFamily.MongoDB, v)},
                 {"Redis=", "Redis Connection", v => Add(ConnectionFamily.Redis, v)},
+                {"Memcached=", "Memcached Connection (host:port)", v => Add(ConnectionFamily.Redis, v)},
                 {"Ping=", "Host or ip address", v => Add(ConnectionFamily.Ping, v)},
                 {"HttpGet=", "https(s)://host:port/path", v => Add(ConnectionFamily.HttpGet, v)},
                 {"v|Version", "Show version", v => needVer = true},
