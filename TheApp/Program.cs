@@ -32,7 +32,7 @@ namespace TheApp
             var date = AssemblyBuildDateTimeAttribute.CallerUtcBuildDate;
             var tz = TimeZoneInfo.Local;
             if (date.HasValue && date.Value.Year > 2000)
-                appVer += $" (built at {date.Value} {TimeZoneInfo.Local.DisplayName})";
+                appVer += $" (built at {date.Value}, {TimeZoneInfo.Local.DisplayName})";
 
             int timeout = -1;
             var p = new OptionSet(StringComparer.InvariantCultureIgnoreCase)
