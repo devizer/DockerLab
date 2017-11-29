@@ -4,12 +4,13 @@ Here is a proof-of-concept for test-environment of an app with composed dbs (MS 
 
 ## ./WaitFor [-Timeout=second]
 
-It's a sandbox app which intended to check initialization of storage services. It supports native protocols of 5 kinds of storage:
+It's a sandbox app which intended to check initialization of storage services. It supports native protocols of 5 kinds of storage/APIs:
 * MSSQL Server
 * MongoDB
 * ProgreSQL
 * RabbitMQ
 * Redis
+* Http
 
 `./WaitFor` app supports parameters via both command line and environment variobales. 
 This example will check two RDBMS server: SQLServer sqlserver1 and MySQL mysql1
@@ -24,38 +25,38 @@ This [stack.yml](container/stack.yml) is a compose/stack composition defenition
 ## report
 Below is a fragment of `docker-compose up` with stack defenition above:
 ```
- Ping ........... : nginx
- Status ......... : OK. 0.02 msecs (at the 6th second)
-
+ Postgres ....... : Host = postgres; Port=5432; User ID=postgres; Password=postgres; Database=postgres; Timeout = 5; Pooling=false;
+ Version ........ : PostgreSQL 9.4.15 on x86_64-unknown-linux-gnu, compiled by gcc (Debian 4.9.2-10) 4.9.2, 64-bit (at the 2nd second)
+ 
  Ping ........... : google.com
- Status ......... : OK. 0.22 msecs (at the 6th second)
+ Status ......... : OK. 1.63 msecs (at the 3rd second)
 
  HttpGet ........ : http://nginx
- Status ......... : OK (200). 612 bytes recieved (at the 7th second)
-
- HttpGet ........ : https://google.com/404
- Status ......... : NotFound (404). 1564 bytes recieved (at the 8th second)
-
- Redis .......... : redis:6379
- Version ........ : 4.0.2 (Standalone) (at the 8th second)
-
- HttpGet ........ : https://google.com
- Status ......... : OK (200). 46092 bytes recieved (at the 8th second)
-
- MongoDB ........ : mongodb://mongodb:27017
- Version ........ : 3.4.10 (at the 14th second)
+ Status ......... : OK (200). Server: nginx/1.13.7. 612 bytes recieved (at the 3rd second)
 
  RabbitMQ ....... : amqp://rabbitmq:5672
- Version ........ : 3.4.4 (at the 33rd second)
+ Version ........ : 3.4.4 (at the 3rd second)
+ 
+ HttpGet ........ : https://portal.azure.com
+ Status ......... : OK (200). Server: Microsoft-IIS/10.0. 5194 bytes recieved (at the 3rd second)
 
- Postgres ....... : Host = postgres; Port=5432; User ID=postgres; Password=postgres; Database=postgres; Timeout = 5
- Version ........ : PostgreSQL 9.4.15 on x86_64-unknown-linux-gnu, compiled by gcc (Debian 4.9.2-10) 4.9.2, 64-bit (at the 41st second)
+ MySQL .......... : Server = mysql; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5; Pooling=false;
+ Version ........ : 5.5.58 (at the 3rd second)
+ 
+ Redis .......... : redis:6379
+ Version ........ : 4.0.2 (Standalone) (at the 3rd second)
+ 
+ HttpGet ........ : https://google.com
+ Status ......... : OK (200). Server: gws. 47380 bytes recieved (at the 3rd second)
+ 
+ MySQL .......... : Server = mysql_another; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5; Pooling=false;
+ Version ........ : 5.7.20 (at the 3rd second)
+ 
+ Memcached ...... : memcached:11211
+ Version ........ : 1.5.3 [64 bits] (at the 3rd second)
+ 
+ MongoDB ........ : mongodb://mongodb:27017
+ Version ........ : 3.4.10 (at the 4th second)
 
- MySQL .......... : Server = mysql_another; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5
- Version ........ : 5.6.38 (at the 53rd second)
-
- MSSQL .......... : Data Source=sqlserver; User ID=sa; Password=~1qazxsw2; Timeout = 5
- Version ........ : 14.0.3006.16 [Developer Edition (64-bit)] (at the 63rd second)
-```
-
-
+ MSSQL .......... : Data Source=sqlserver; User ID=sa; Password=~1qazxsw2; Timeout = 5; Pooling=false;
+ Version ........ : 14.0.3008.27 [Developer Edition (64-bit)] (at the 4th second)
