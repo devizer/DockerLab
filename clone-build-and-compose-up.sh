@@ -13,5 +13,5 @@ docker rmi -f vlad/theapp
 docker rm -f $(docker ps -a -q)
 docker build -t vlad/theapp -f ./Dockerfile .
 
-export COMPOSE_HTTP_TIMEOUT=61
+export COMPOSE_HTTP_TIMEOUT=121
 docker-compose -f stack.yml up | tee compose-up.log
