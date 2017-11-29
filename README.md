@@ -60,3 +60,9 @@ Below is a fragment of `docker-compose up` with stack defenition above:
 
  MSSQL .......... : Data Source=sqlserver; User ID=sa; Password=~1qazxsw2; Timeout = 5; Pooling=false;
  Version ........ : 14.0.3008.27 [Developer Edition (64-bit)] (at the 4th second)
+```
+Full Report is available by travis-ci link above
+
+## Build and run locally
+Just copy into shell the content of [clone-build-and-compose-up.sh](clone-build-and-compose-up.sh)
+Prerequesites: git, docker, docker-compose and dotnet sdk 2+
