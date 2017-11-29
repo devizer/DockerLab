@@ -68,8 +68,14 @@ namespace TheApp
             HttpClient c = new HttpClient();
             var response = c.GetAsync(connectionString).Result;
             var statusCode = response.StatusCode;
+            IEnumerable<string> values;
+            var server =
+                response.Headers.TryGetValues("server", out values)
+                    ? values.FirstOrDefault()
+                    : "N/A";
+            
             var bytes = response.Content.ReadAsByteArrayAsync().Result;
-            return $"{statusCode} ({(int)statusCode}). {bytes.Length} bytes recieved";
+            return $"{statusCode} ({(int)statusCode}). Server: {server}. {bytes.Length} bytes recieved";
         }
 
         private static string GoHttpsGet_Strict(string connectionString)
