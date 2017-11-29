@@ -14,9 +14,10 @@ namespace WaitFor.Common
 
             PingOptions options = new PingOptions(connectionString.Ttl, connectionString.AllowFragment);
             Ping p = new Ping();
+            var freq = Convert.ToDecimal(Stopwatch.Frequency);
             Stopwatch sw = Stopwatch.StartNew();
             p.Send(connectionString.Host, connectionString.Timeout, buffer, options);
-            var ret = sw.ElapsedTicks / Convert.ToDecimal(Stopwatch.Frequency);
+            var ret = sw.ElapsedTicks / freq;
             return ret;
         }
     }

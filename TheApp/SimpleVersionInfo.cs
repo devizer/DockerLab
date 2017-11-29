@@ -258,9 +258,7 @@ namespace TheApp
             // config.Authentication.Parameters["password"] = "demo";
 
             var mc = new MemcachedClient(nullLoggerFactory, config);
-            object result;
             Stopwatch sw = Stopwatch.StartNew();
-            // return mc.Stats().GetVersion(ipEndPoint).ToString();
             var stats = mc.Stats();
             var rawVersion = stats.GetRaw("version");
             var rawPointerSize = stats.GetRaw("pointer_size");

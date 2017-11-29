@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace WaitFor.Common
 {
-
     // Valid Status=200,403,100-499; Uri=http://mywebapi:80/get-status; Method=POST; *Accept=application/json, text/javascript; Payload={'verbosity':'normal'}"
     public class ConnectionStringParser
     {
@@ -48,8 +47,8 @@ namespace WaitFor.Common
             List<Pair> ret = new List<Pair>();
             var vars = this.
                 ConnectionString.Split(';')
-                    .Select(x => x.Trim())
-                    .Where(x => x.Length > 0);
+                .Select(x => x.Trim())
+                .Where(x => x.Length > 0);
 
             foreach (var v in vars)
             {
@@ -108,4 +107,5 @@ namespace WaitFor.Common
             return pairs.FirstOrDefault(x => !x.HasKey && !string.IsNullOrWhiteSpace(x.Value))?.Value;
         }
     }
+
 }
