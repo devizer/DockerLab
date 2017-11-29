@@ -31,7 +31,7 @@ namespace WaitFor.Common
             _Uri = new Lazy<string>(() =>
             {
                 var ret = Pairs.GetFirstString("Uri") ?? Pairs.GetFirstWithoutKey();
-                if (string.IsNullOrEmpty(ret)) throw new Exception("Uri parameter is expected");
+                if (string.IsNullOrEmpty(ret)) throw new ArgumentException("Uri parameter is expected");
                 return ret;
             });
 
