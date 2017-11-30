@@ -15,6 +15,7 @@ script:
  - cp ../../../container/* .
  - docker build -t vlad/theapp .
  - export COMPOSE_HTTP_TIMEOUT=61
+ - export COMPOSE_PROJECT_NAME=lab
  - time (docker-compose create) 
  - docker-compose up -d
  - (docker kill lab_theapp_1 >/dev/null || true); docker start -i linux_theapp_1;
