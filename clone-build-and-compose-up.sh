@@ -9,7 +9,7 @@ cd bin/linux
 ./WaitFor -Timeout=3 -HttpGet=https://google.com/404
 
 cp ../../../container/* .
-docker rmi -f vlad/theapp
+docker rmi -f lab/theapp
 docker build -t lab/theapp .
 
 export COMPOSE_HTTP_TIMEOUT=121
