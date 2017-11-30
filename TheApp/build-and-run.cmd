@@ -1,3 +1,4 @@
+pushd Properties && call inc-version-info.cmd && popd
 dotnet publish -v:m -c Debug -o bin\output TheApp.sln
 pushd bin\output
 dotnet TheApp.dll --help
