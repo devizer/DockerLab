@@ -1,28 +1,25 @@
 sudo: required
 services:
-  - docker
+- docker
 language: csharp
 mono: none
 dotnet: 2.0.3
 env:
   global:
-   - secure: C/kKH2Ad7t0v0n62mBYkplfMFKHnqZ8RzOZH6KnA7O/CxwdS1O5KyRRiSWF609PESbkQBDOmV26qmtJOZoVEhgcwF3NQ0c7lgW8M2gNYKlEzAMLCigsRdfjx+x83uFyKhe/XXq4wGncGC6alanY/FNqsCZwv8BRD3VfIZDXMT6Wbd5JVpk/DtzPGaLFIjvcIg9yJnc+FEthXX5HZf540zkK5VV6hmXsHkLc+fvuWUG+SR03dFetPC3DpEUwDKPejyOuvtrnZBkDusPCXp7qBl9nBTCZFK6rWqWYBuKqfgLyr0NXPHxqKyYr3K4P5Qf0FojwloU1etxrBeDRnMvnpvpUH6G+88M4YXO4WTTvo0es9a1ysMIIPRxdUuQ/rd/6Oc1EJLhMfyx4gsv1xvrCMII7eSUobVDTMdkPh2m9oHOmaddxwj+mXOy5nkxEDWP099tTQ8PZnPyok1RbD3ydaBm0JIjChLKSctNYmArtPV7uIpz4cBZQZfmTu6MPCsvF4mYON3yW8/yHhXNSDuY8aVnO6glnYb8Z5sMnEv6AI/2KjNUGpkmDGbTvOAbRIKWJIi4cJ2MnboSEYYeiLnuBNFUv1YC//2ZSaXytBru9qkrBwCasJxL9NEv1A1+YSWxsBdHdBT9rOQ6omg5j7BpBkwAZotwX23j2f6HlyUyDqJPY=
-   - secure: ZSW9gN+3+HKL8mxUsOLDNpFtTJpyhz7Qn7XBnuvzw9CoJRzvpLHbguHJ5e71xwjDDrzrdL7l62b7/aOsBDMJ2fTE1TuvdUWlCl366K7xQz07PwoEqfQkM2gl4TgIWVPjeg7Y7gnpCcjJcwiwCbws1hU8OHN56zILqV5F3IHvIuMmxop6aDqZBKPNyzLJZgxNj+1JHx+BUdchRmKtER/SHVb5kGIrQQuFY/qWPmS/cWz8T4GO49ey43QxHqUZim470+Dmk/4769n76zLs5k5YVrkQGH80/E/bzFnEGdt5ZQzSZ7a9i5P1X9koRrMZO74ANAdHU8aeco+uBkFU2/Oh8PEKaw3HWIybnowNpPY3Rczl8ws+fOiPUfAKh4MZzmC11e3YtYxID4Kepis8LSDdL4JPA6Cktk2JYQgAHjAyvLnr7pV7PuczzgtW6N7Gfeq7eq3g9K+ddjl/CxBItxbf15et6KtqUGMRMe/N4H4rfGc5dvqh7UxrCCsHm5cFXaFxySQhvAUOcugIRxI4Ffu9gQHZu7w2P1IdYkynApAvona2TkLtPGzRrGMP131U+BaOyxy+EWhb51r5Z+xvs9u2SydHDB6L4eXvXa2e8IQMtY8SfeN3eEIr4htx9j2gNFpC2BPovmDKmsOTp/u2Pv9J4UWmDvCq4yP74dW1T4qMVUg=
+  - secure: none
 dist: trusty
 script:
- - printenv | sort
- - docker info; printf "\n\n\n"; docker-compose version; printf "\n\n\n"
- - cd TheApp;
- - bash patch-build-date.sh
- - dotnet publish -v:m -c Release -r linux-x64 -o bin/linux TheApp.sln
- - cd bin/linux
- - ./WaitFor -Timeout=5 -Ping=google.com -Ping=google.com42 -HttpGet=http://google.com -HttpGet=http://google.com/404
- - cp ../../../container/* .
- - docker build -t lab/theapp .
- - export COMPOSE_HTTP_TIMEOUT=61
- - export COMPOSE_PROJECT_NAME=lab
- - time (docker-compose create) 
- - docker-compose up -d
- - (docker kill lab_theapp_1 >/dev/null || true); docker start -i lab_theapp_1;
- - (docker kill lab_theapp_1 >/dev/null || true); docker start -i lab_theapp_1;
- - # docker-compose -f stack.yml down
+  - docker info; printf "\n\n\n"; docker-compose version; printf "\n\n\n"
+  - cd TheApp;
+  - bash patch-build-date.sh
+  - dotnet publish -v:m -c Release -r linux-x64 -o bin/linux TheApp.sln
+  - cd bin/linux
+  - "./WaitFor -Timeout=5 -Ping=google.com -Ping=google.com42 -HttpGet=http://google.com -HttpGet=http://google.com/404"
+  - cp ../../../container/* .
+  - docker build -t lab/theapp .
+  - export COMPOSE_HTTP_TIMEOUT=61
+  - export COMPOSE_PROJECT_NAME=lab
+  - time (docker-compose create)
+  - docker-compose up -d
+  - "(docker kill lab_theapp_1 >/dev/null || true); docker start -i lab_theapp_1;"
+  - "(docker kill lab_theapp_1 >/dev/null || true); docker start -i lab_theapp_1;"
