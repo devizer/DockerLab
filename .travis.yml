@@ -18,6 +18,6 @@ script:
  - export COMPOSE_PROJECT_NAME=lab
  - time (docker-compose create) 
  - docker-compose up -d
- - (docker kill lab_theapp_1 >/dev/null || true); docker start -i linux_theapp_1;
- - (docker kill lab_theapp_1 >/dev/null || true); docker start -i linux_theapp_1;
+ - (docker kill lab_theapp_1 >/dev/null || true); docker start -i lab_theapp_1;
+ - (docker kill lab_theapp_1 >/dev/null || true); docker start -i lab_theapp_1;
  - # docker-compose -f stack.yml down
