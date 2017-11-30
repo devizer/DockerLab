@@ -13,10 +13,10 @@ script:
  - cd bin/linux
  - ./WaitFor -Timeout=5 -Ping=google.com -Ping=google.com42 -HttpGet=http://google.com -HttpGet=http://google.com/404
  - cp ../../../container/* .
- - docker build -t vlad/theapp -f ./Dockerfile .
+ - docker build -t vlad/theapp .
  - export COMPOSE_HTTP_TIMEOUT=61
- - time (docker-compose -f stack.yml create) 
- - docker-compose -f stack.yml up -d
- - (docker kill linux_theapp_1 >/dev/null || true); docker start -i linux_theapp_1;
- - (docker kill linux_theapp_1 >/dev/null || true); docker start -i linux_theapp_1;
+ - time (docker-compose create) 
+ - docker-compose up -d
+ - (docker kill lab_theapp_1 >/dev/null || true); docker start -i linux_theapp_1;
+ - (docker kill lab_theapp_1 >/dev/null || true); docker start -i linux_theapp_1;
  - # docker-compose -f stack.yml down
