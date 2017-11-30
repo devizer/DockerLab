@@ -4,8 +4,12 @@ services:
 language: csharp
 mono: none
 dotnet: 2.0.3
+env:
+  global:
+    secure: C/kKH2Ad7t0v0n62mBYkplfMFKHnqZ8RzOZH6KnA7O/CxwdS1O5KyRRiSWF609PESbkQBDOmV26qmtJOZoVEhgcwF3NQ0c7lgW8M2gNYKlEzAMLCigsRdfjx+x83uFyKhe/XXq4wGncGC6alanY/FNqsCZwv8BRD3VfIZDXMT6Wbd5JV$
 dist: trusty
 script:
+ - printenv | sort
  - docker info; printf "\n\n\n"; docker-compose version; printf "\n\n\n"
  - cd TheApp;
  - bash patch-build-date.sh
