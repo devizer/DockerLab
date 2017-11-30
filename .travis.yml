@@ -13,7 +13,7 @@ script:
  - cd bin/linux
  - ./WaitFor -Timeout=5 -Ping=google.com -Ping=google.com42 -HttpGet=http://google.com -HttpGet=http://google.com/404
  - cp ../../../container/* .
- - docker build -t vlad/theapp .
+ - docker build -t lab/theapp .
  - export COMPOSE_HTTP_TIMEOUT=61
  - export COMPOSE_PROJECT_NAME=lab
  - time (docker-compose create) 
