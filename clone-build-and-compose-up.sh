@@ -17,3 +17,4 @@ export COMPOSE_PROJECT_NAME=lab
 docker-compose rm -f theapp
 docker-compose up | tee compose-up.log
 
+# docker-compose -p lab kill; docker-compose -p lab rm -f
