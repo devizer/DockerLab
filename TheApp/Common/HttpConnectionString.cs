@@ -37,7 +37,7 @@ namespace WaitFor.Common
 
             _Timeout = new Lazy<int>(() =>
             {
-                return Pairs.GetFirstInt("Timeout", defVal: 30, min: 1);
+                return Pairs.GetFirstInt("Timeout", defVal: 30000, min: 1);
             });
 
             _Method = new Lazy<string>(() =>

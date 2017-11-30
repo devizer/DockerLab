@@ -10,8 +10,10 @@ cd bin/linux
 
 cp ../../../container/* .
 docker rmi -f vlad/theapp
-docker rm -f $(docker ps -a -q)
-docker build -t vlad/theapp -f ./Dockerfile .
+docker build -t lab/theapp .
 
 export COMPOSE_HTTP_TIMEOUT=121
-docker-compose -f stack.yml up | tee compose-up.log
+export COMPOSE_PROJECT_NAME=lab
+docker-compose rm -f theapp
+docker-compose up | tee compose-up.log
+
