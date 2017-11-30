@@ -13,13 +13,22 @@ namespace TheApp
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Ooops. Something gone wrong. Full Exception details:{0}{1}{0}{0}.Short Problem description: {2}",
+                WriteError(string.Format(
+                    "Ooops. Something gone wrong. Full Exception details:{0}{1}{0}{0}.Short Problem description: {2}",
                     Environment.NewLine,
                     ex,
-                    ex.GetExeptionDigest());
+                    ex.GetExeptionDigest()));
 
                 return 666;
             }
+        }
+
+        private static void WriteError(string text)
+        {
+            var f = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(text);
+            Console.ForegroundColor = f;
         }
     }
 }

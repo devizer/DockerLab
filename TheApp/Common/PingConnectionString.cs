@@ -30,7 +30,7 @@ namespace WaitFor.Common
 
             _Size = new Lazy<int>(() =>
             {
-                return Pairs.GetFirstInt("Size", defVal: 32, min: 1, max: 65535);
+                return Pairs.GetFirstInt("Size", defVal: 32, min: 1, max: 128*1024);
             });
 
             _AllowFragment = new Lazy<bool>(() =>

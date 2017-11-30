@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -64,13 +65,15 @@ namespace TheApp
 
             if (!needLogo)
             {
-                Console.WriteLine($"WaitFor {appVer} is living in docker");
+                Console.WriteLine($"WaitFor {appVer} is living in docker {Environment.NewLine}");
                 Console.WriteLine();
             }
 
             if (needHelp)
             {
-                p.WriteOptionDescriptions(Console.Out);
+                StringBuilder b = new StringBuilder();
+                p.WriteOptionDescriptions(new StringWriter(b));
+                Console.WriteLine(b);
                 return 0;
             }
 
@@ -272,15 +275,6 @@ namespace TheApp
         {
             return " " + (caption + " ").PadRight(CaptionWidth, '.') + " : " + value;
         }
-
-        private static void WriteError(string text)
-        {
-            var f = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(text);
-            Console.ForegroundColor = f;
-        }
-
     }
 }
 

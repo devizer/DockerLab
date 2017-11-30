@@ -1,7 +1,8 @@
 pushd Properties && call inc-version-info.cmd && popd
+
 dotnet publish -v:m -c Debug -o bin\output TheApp.sln
 pushd bin\output
-dotnet TheApp.dll --help
+dotnet WaitFor.dll --help
 net start mssql$sql2005 1>nul 2>&1
 dotnet WaitFor.dll -Timeout=9 ^
  "-MySQL=      Server = 192.168.0.8; Port=3306; Uid = mysql; Pwd = mysql; " ^
