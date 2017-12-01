@@ -26,7 +26,7 @@ namespace TheApp
 
 
 
-        public static int Main_Impl(string[] args)
+        public static int WaitFor_Impl(string[] args)
         {
             bool needHelp = false, needLogo = false, needVer = false;
             var appVer = Assembly.GetEntryAssembly().GetName().Version.ToString();
@@ -98,6 +98,7 @@ namespace TheApp
                     {
                         try
                         {
+                            info.TryNumber++;
                             info.Version = SimpleVersionInfo.GetVersion(info.Family, info.ConnectionString);
                             info.Exception = null;
                             info.OkTime = Model.StartAt.ElapsedMilliseconds / 1000m;
@@ -228,7 +229,11 @@ namespace TheApp
 
             string caption2 = item.Family == ConnectionFamily.Ping || item.Family == ConnectionFamily.HttpGet ? "Status" : "Version";
             if (item.Exception != null) caption2 = "Exception";
-            var time = $" (at the {OrdinalNumbers.AddOrdinal((int)Math.Ceiling(item.OkTime))} second)";
+            var time = string.Format(" (at the {0} second, {1} try)", 
+                OrdinalNumbers.AddOrdinal((int) Math.Ceiling(item.OkTime)),
+                OrdinalNumbers.AddOrdinal(item.TryNumber)
+                );
+            
             var lines = new[]
             {
                 new

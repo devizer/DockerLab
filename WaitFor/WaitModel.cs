@@ -42,6 +42,7 @@ namespace TheApp
         public ConnectionFamily Family;
         public string ConnectionString;
         public bool IsOk;
+        public int TryNumber;
         public string Version;
         public string Exception;
         public decimal OkTime;

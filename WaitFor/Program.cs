@@ -9,7 +9,7 @@ namespace TheApp
         {
             try
             {
-                return WaitForProgram.Main_Impl(args);
+                return WaitForProgram.WaitFor_Impl(args);
             }
             catch (Exception ex)
             {
