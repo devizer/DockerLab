@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HelloRest.Controllers
 {
     [Route("api/v1")]
-    public class ValuesController : Controller
+    public class HelloRest : Controller
     {
         [HttpPost]
         [Route("status")]
