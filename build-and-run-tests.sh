@@ -15,6 +15,7 @@ cd containers
 export COMPOSE_HTTP_TIMEOUT=121
 export COMPOSE_PROJECT_NAME=lab
 
+docker network create --driver=bridge "$COMPOSE_PROJECT_NAME"_default
 time (docker-compose create);
 
 printf "\n ------------- RUN Tests -------------\n"
