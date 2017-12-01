@@ -129,5 +129,7 @@ services:
 
     hellorest:
         image: lab/hello-rest
+        environment:
+            ASPNETCORE_URLS: "http://+:80"
         ports:
         - "5678:80"
