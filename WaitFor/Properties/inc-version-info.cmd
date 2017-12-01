@@ -12,4 +12,4 @@ Set /A MYBUILD=%MYBUILD% + 1
 Echo NEW Build: "%MYBUILD%"
 Echo %MYBUILD% > build-number.txt
 
-echo [assembly: System.Reflection.AssemblyVersion("%MYVERSION%.%MYBUILD%")] > AssemblyVersion.cs 
+echo [assembly: System.Reflection.AssemblyVersion("%MYVERSION%.%MYBUILD%")] > AssemblyVersion.cs
