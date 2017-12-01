@@ -9,17 +9,4 @@ env:
   - secure: none
 dist: trusty
 script:
-  - docker info; printf "\n\n\n"; docker-compose version; printf "\n\n\n"
-  - cd TheApp;
-  - bash patch-build-date.sh
-  - dotnet publish -v:m -c Release -r linux-x64 -o bin/linux TheApp.sln
-  - cd bin/linux
-  - "./WaitFor -Timeout=5 -Ping=google.com -Ping=google.com42 -HttpGet=http://google.com -HttpGet=http://google.com/404"
-  - cp ../../../container/* .
-  - docker build -t lab/theapp .
-  - export COMPOSE_HTTP_TIMEOUT=61
-  - export COMPOSE_PROJECT_NAME=lab
-  - time (docker-compose create)
-  - docker-compose up -d
-  - "(docker kill lab_theapp_1 >/dev/null || true); docker start -i lab_theapp_1;"
-  - "(docker kill lab_theapp_1 >/dev/null || true); docker start -i lab_theapp_1;"
+  - bash build-and-run-tests.sh 
