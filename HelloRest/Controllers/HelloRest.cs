@@ -16,11 +16,11 @@ namespace HelloRest.Controllers
             return new { OK = true };
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("ping")]
-        public string Ping()
+        public JsonResult Ping()
         {
-            return "Pong";
+            return Json("Pong");
         }
 
     }
