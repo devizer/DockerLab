@@ -5,7 +5,7 @@ printf "\n ------------- BUILD WaitFor as lab/theapp -------------\n"
 pushd WaitFor/bin/linux
 ./WaitFor -Timeout=3 -HttpGet=https://google.com/404
 cp ../../../containers/WaitFor/* .
-docker rmi -f lab/theapp
+(docker rmi -f lab/theapp || true)
 docker build -t lab/theapp .
 docker run -it lab/theapp -Timeout=3 -Ping=google.com
 popd
