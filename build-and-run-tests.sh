@@ -1,14 +1,7 @@
 #!/bin/bash
 dotnet publish -v:m -c Debug -r linux-x64 -o bin/linux DockerLab.sln
 
-printf "\n ------------- BUILD WaitFor as lab/theapp -------------\n"
-pushd WaitFor/bin/linux
-./WaitFor -Timeout=3 -HttpGet=https://google.com
-cp ../../../containers/WaitFor/* .
-(docker rmi -f lab/theapp || true)
-docker build -t lab/theapp .
-docker run -it lab/theapp -Timeout=3 -Ping=google.com
-popd
+bash build-images.sh
 
 printf "\n ------------- BUILD containers -------------\n"
 cd containers
