@@ -8,5 +8,6 @@ env:
   global:
   - secure: none
 dist: trusty
+
 script:
   - bash build-and-run-tests.sh 
