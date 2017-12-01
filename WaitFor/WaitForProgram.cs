@@ -47,11 +47,11 @@ namespace TheApp
                 {"Memcached=", "Memcached Connection", v => Add(ConnectionFamily.Memcached, v)},
                 {"Ping=", "Host or ip address", v => Add(ConnectionFamily.Ping, v)},
                 {"HttpGet=", "https(s)://host:port/path", v => Add(ConnectionFamily.HttpGet, v)},
+                {"EnvPrefix=", "default is WAIT_FOR_", v => EnvPrefix = string.IsNullOrWhiteSpace(v) ? EnvPrefix : v.Trim()},
                 {"v|Version", "Show version", v => needVer = true},
                 {"h|?|Help", "Display this help", v => needHelp = v != null},
                 {"n|nologo", "Hide logo", v => needLogo = v != null}
             };
-
 
             p.Parse(args);
             Model.Timeout = timeout;
@@ -89,11 +89,18 @@ namespace TheApp
             Console.WriteLine(startup + Environment.NewLine);
 
             CountdownEvent done = new CountdownEvent(Model.Connections.Count);
-            foreach (ConnectionInfo infoCopy in Model.Connections)
+            int delay = 0;
+            const int delayIncrement = 777;
+            var ordredByHavy = Model.Connections.OrderBy(x => x.Family.IsHavy()).ToList();
+            foreach (ConnectionInfo infoCopy in ordredByHavy)
             {
+                int delayLocal = delay;
                 var info = infoCopy;
+                if (info.Family.IsHavy()) delay += delayIncrement;
                 Thread thread = new Thread(() =>
                 {
+                    Thread.Sleep(delayLocal);
+                    Console.WriteLine($"Delay {delayLocal} for {info.Family}");
                     while (true)
                     {
                         try

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 
 namespace TheApp
@@ -50,6 +51,23 @@ namespace TheApp
         public ConnectionInfo Clone()
         {
             return (ConnectionInfo) this.MemberwiseClone();
+        }
+    }
+
+    public static class WaitModelExtentions
+    {
+        public static bool IsHavy(this ConnectionFamily family)
+        {
+            var havy = new ConnectionFamily[]
+            {
+                ConnectionFamily.MSSQL, 
+                ConnectionFamily.MongoDB, 
+                ConnectionFamily.MySQL, 
+                ConnectionFamily.Postgres, 
+                ConnectionFamily.RabbitMQ, 
+            };
+
+            return havy.Any(x => x == family);
         }
     }
 
