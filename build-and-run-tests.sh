@@ -3,7 +3,7 @@ dotnet publish -v:m -c Debug -r linux-x64 -o bin/linux DockerLab.sln
 
 printf "\n ------------- BUILD WaitFor as lab/theapp -------------\n"
 pushd WaitFor/bin/linux
-./WaitFor -Timeout=3 -HttpGet=https://google.com/404
+./WaitFor -Timeout=3 -HttpGet=https://google.com
 cp ../../../containers/WaitFor/* .
 (docker rmi -f lab/theapp || true)
 docker build -t lab/theapp .

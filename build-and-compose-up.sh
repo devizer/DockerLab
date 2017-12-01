@@ -18,15 +18,5 @@ docker-compose rm -f theapp
 # echo "Kill all the services"; docker-compose -p lab kill; docker-compose -p lab rm -f
 
 # it will output into the log of all the services, will never stop
-docker-compose up | tee compose-up.log; exit;
-
-# UNIT TESTS: it will output to log the tests *only* and forward exit code to build server
-test=theapp;
-export COMPOSE_PROJECT_NAME=lab
-docker-compose create;
-other_services=$(docker-compose ps | tail -n +3 | awk '{print $1}' | grep -vE '(_'$test'_)')
-docker start $other_services; 
-echo Starting unit tests
-docker start -i "$COMPOSE_PROJECT_NAME"_"$test"_1; 
-exit $?;
+docker-compose up  --exit-code-from theapp | tee compose-up.log; exit;
 
