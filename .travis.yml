@@ -10,4 +10,4 @@ env:
 dist: trusty
 
 script:
-  - bash build-and-run-tests.sh 
+  - bash -e build-and-run-tests.sh 
