@@ -258,8 +258,21 @@ namespace TheApp
             // config.Authentication.Parameters["password"] = "demo";
 
             var mc = new MemcachedClient(nullLoggerFactory, config);
+
+            mc.Get(new [] { $"PING_({Guid.NewGuid().ToString("N")})" });
+            // return "OK. TryGet took " + (sw.ElapsedTicks / Convert.ToDecimal(Stopwatch.Frequency)).ToString("f2") + " msec";
+
             Stopwatch sw = Stopwatch.StartNew();
-            var stats = mc.Stats();
+            ServerStats stats;
+            try
+            {
+                stats = mc.Stats();
+            }
+            catch (NullReferenceException)
+            {
+                // yes, memcached client is buggy
+                throw new Exception("No memcached connection is available to service this operation");
+            }
             var rawVersion = stats.GetRaw("version");
             var rawPointerSize = stats.GetRaw("pointer_size");
             var version = rawVersion.FirstOrDefault().Value ?? "N/A";
@@ -269,8 +282,6 @@ namespace TheApp
 
             return version;
 
-            mc.Get($"PING_({Guid.NewGuid().ToString("N")})");
-            return "OK. TryGet took " + (sw.ElapsedTicks / Convert.ToDecimal(Stopwatch.Frequency)).ToString("f2") + " msec";
         }
     }
 }

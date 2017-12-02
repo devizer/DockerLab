@@ -77,8 +77,6 @@ namespace TheApp
                 return 0;
             }
 
-            // Wait_Prev_Implementation();
-
             StringBuilder startup = new StringBuilder("Waiting for network services:");
             foreach (var m in Model.Connections.OrderBy(x => x.Family.ToString()))
             {
@@ -90,7 +88,7 @@ namespace TheApp
 
             CountdownEvent done = new CountdownEvent(Model.Connections.Count);
             int delay = 0;
-            const int delayIncrement = 777;
+            const int delayIncrement = 111;
             var ordredByHavy = Model.Connections.OrderBy(x => x.Family.IsHavy()).ToList();
             foreach (ConnectionInfo infoCopy in ordredByHavy)
             {
@@ -100,7 +98,6 @@ namespace TheApp
                 Thread thread = new Thread(() =>
                 {
                     Thread.Sleep(delayLocal);
-                    Console.WriteLine($"Delay {delayLocal} for {info.Family}");
                     while (true)
                     {
                         try
@@ -121,6 +118,7 @@ namespace TheApp
                                 exeptionDigest = exeptionDigest.Split('\r', '\n').Select(x => x.Trim()).FirstOrDefault(x => x.Length > 0);
 
                             info.Exception = exeptionDigest;
+                            Debug.WriteLine($"Dependency {info.Family} does not respond to requests{Environment.NewLine + ex}");
                         }
 
                         if (Model.StartAt.Elapsed > TimeSpan.FromSeconds(Model.Timeout))
