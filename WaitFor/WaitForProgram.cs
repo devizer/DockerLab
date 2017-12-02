@@ -30,9 +30,10 @@ namespace TheApp
         {
             bool needHelp = false, needLogo = false, needVer = false;
             var appVer = Assembly.GetEntryAssembly().GetName().Version.ToString();
+            var appVerShort = appVer;
             var date = AssemblyBuildDateTimeAttribute.CallerUtcBuildDate;
             if (date.HasValue && date.Value.Year > 2000)
-                appVer += $" (built at {date.Value}, {TimeZoneInfo.Local.DisplayName})";
+                appVer += $" (built at {date.Value})";
 
             int timeout = -1;
             var p = new OptionSet(StringComparer.InvariantCultureIgnoreCase)
@@ -59,14 +60,13 @@ namespace TheApp
 
             if (needVer)
             {
-                Console.WriteLine(appVer);
+                Console.WriteLine(appVerShort);
                 return 0;
             }
 
             if (!needLogo)
             {
                 Console.WriteLine($"WaitFor {appVer} is living in docker {Environment.NewLine}");
-                Console.WriteLine();
             }
 
             if (needHelp)
