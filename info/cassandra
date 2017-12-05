@@ -5,7 +5,7 @@ docker run --name some-cassandra -d -e CASSANDRA_BROADCAST_ADDRESS=10.43.43.43 -
 # 7000 - messaging service
 #
 
-LATEST
+LATEST 620
 # INFO  [main] 2017-12-05 05:47:06,198 StorageService.java:617 - Cassandra version: 3.11.1
 # INFO  [main] 2017-12-05 05:47:06,198 StorageService.java:618 - Thrift API version: 20.1.0
 # INFO  [main] 2017-12-05 05:47:06,198 StorageService.java:619 - CQL supported versions: 3.4.4 (default: 3.4.4)
@@ -15,7 +15,7 @@ LATEST
 # INFO  [main] 2017-12-05 05:47:26,243 Server.java:156 - Starting listening for CQL clients on /0.0.0.0:9042 (unencrypted)...
 
 
-2.1
+2.1 310
 INFO  05:57:23 Cassandra version: 2.1.19
 INFO  05:57:23 Thrift API version: 19.39.0
 INFO  05:57:23 CQL supported versions: 2.0.0,3.2.1 (default: 3.2.1)
