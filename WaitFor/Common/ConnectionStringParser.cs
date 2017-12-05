@@ -61,17 +61,21 @@ namespace WaitFor.Common
 
             foreach (var v in vars)
             {
-                string key = null, value = null;
                 int p = v.IndexOf('=');
                 if (p < 0)
                 {
-                    ret.Add(new Pair() { Key = v, Value = v, HasKey = false });
+                    ret.Add(new Pair { Key = v, Value = v, HasKey = false });
                 }
                 else
                 {
-                    key = p > 0 ? v.Substring(0, p) : "";
-                    value = p<v.Length-1 ? v.Substring(p + 1) : "";
-                    ret.Add(new Pair() { Key = key, Value = value, HasKey = true });
+                    string key = p > 0 ? v.Substring(0, p).Trim() : "";
+                    string value = p<v.Length-1 ? v.Substring(p + 1).Trim() : "";
+                    ret.Add(new Pair
+                    {
+                        Key = key,
+                        Value = value,
+                        HasKey = string.IsNullOrEmpty(key)
+                    });
                 }
             }
 
@@ -80,7 +84,7 @@ namespace WaitFor.Common
 
     }
 
-    public static class ConnectionStringBuilderExtentions
+    public static class ConnectionStringBuilderExtensions
     {
         const StringComparison Ignore = StringComparison.InvariantCultureIgnoreCase;
 
