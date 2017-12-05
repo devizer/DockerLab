@@ -7,6 +7,7 @@ namespace TheApp
     {
         static int Main(string[] args)
         {
+
             try
             {
                 return WaitForProgram.WaitFor_Impl(args);

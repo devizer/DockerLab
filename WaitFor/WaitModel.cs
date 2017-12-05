@@ -14,6 +14,7 @@ namespace TheApp
         Postgres,
         RabbitMQ,
         MongoDB,
+        Cassandra,
         Redis,
         Memcached,
         Ping,
@@ -65,6 +66,7 @@ namespace TheApp
                 ConnectionFamily.MySQL, 
                 ConnectionFamily.Postgres, 
                 ConnectionFamily.RabbitMQ, 
+                ConnectionFamily.Cassandra, 
             };
 
             return havy.Any(x => x == family);

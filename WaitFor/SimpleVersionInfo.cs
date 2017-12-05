@@ -7,6 +7,8 @@ using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Text;
+using System.Xml.XPath;
+using Cassandra;
 using Dapper;
 using Enyim.Caching;
 using Enyim.Caching.Configuration;
@@ -46,6 +48,9 @@ namespace TheApp
 
                 case ConnectionFamily.RabbitMQ:
                     return GoRabbitMQ(connectionString);
+
+                case ConnectionFamily.Cassandra:
+                    return GoCassandra(connectionString);
 
                 case ConnectionFamily.Ping:
                     return GoPing(connectionString);
@@ -282,6 +287,50 @@ namespace TheApp
 
             return version;
 
+        }
+
+        // Samples:
+        // Cassandra 2.1.19; CQL 3.2.1; Protocol 3; Thrift 19.39.0
+        // Cassandra 3.11.1; CQL 3.4.4; Protocol 4; Thrift 20.1.0
+        static string GoCassandra(string connectionString, int queryTimeoutInSeconds = 10)
+        {
+            Cluster cluster = Cluster.Builder()
+                .WithConnectionString(connectionString)
+                .WithQueryTimeout(queryTimeoutInSeconds*1000)
+                .Build();
+
+            ISession session = cluster.Connect();
+
+            var fields = new[]
+            {
+                new {field = "release_version", desc = "Cassandra"},
+                new {field = "cql_version", desc = "CQL"},
+                new {field = "native_protocol_version", desc = "Protocol"},
+                new {field = "thrift_version", desc = "Thrift"},
+            };
+
+            // Row result = session.Execute("SELECT cql_version, release_version, thrift_version, native_protocol_version FROM system.local").First();
+            Row result = session.Execute("SELECT * FROM system.local").First();
+
+            StringBuilder ret = new StringBuilder();
+            foreach (var field in fields)
+            {
+                string val = null;
+                try
+                {
+                    var raw = result.GetValue(typeof(object), field.field);
+                    val = Convert.ToString(raw);
+                }
+                catch
+                {
+                }
+
+                ret.Append(ret.Length == 0 ? "" : "; ").AppendFormat("{0}: {1}",
+                    field.desc, string.IsNullOrEmpty(val) ? "unknown" : val);
+
+            }
+
+            return ret.ToString();
         }
     }
 }

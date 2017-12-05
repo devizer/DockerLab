@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 
 namespace WaitFor.Common
 {
@@ -15,7 +16,10 @@ namespace WaitFor.Common
         {
             _Host = new Lazy<string>(() =>
             {
-                return Pairs.GetFirstString("Address") ?? Pairs.GetFirstWithoutKey();
+                return
+                    Pairs.GetFirstString("Address")
+                    ?? Pairs.GetFirstWithoutKey()
+                    ?? throw new Exception("Address parameter is undefined");
             });
 
             _Timeout = new Lazy<int>(() =>
@@ -39,6 +43,7 @@ namespace WaitFor.Common
             });
         }
 
+        [NotNull]
         public string Host => _Host.Value;
 
         public int Timeout => _Timeout.Value;

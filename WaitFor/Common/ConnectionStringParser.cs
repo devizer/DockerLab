@@ -1,30 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace WaitFor.Common
 {
     // Valid Status=200,403,100-499; Uri=http://mywebapi:80/get-status; Method=POST; *Accept=application/json, text/javascript; Payload={'verbosity':'normal'}"
     public class ConnectionStringParser
     {
+        [NotNull]
         public readonly string ConnectionString;
-        private readonly Lazy<List<Pair>> LazyPairs;
+
+        [NotNull, ItemNotNull]
+        public IEnumerable<Pair> Pairs => _LazyPairs.Value;
+
+        private readonly Lazy<List<Pair>> _LazyPairs;
 
         public class Pair
         {
-            public string Key { get; set; }
-            public string Value { get; set; }
 
-            public bool HasKey => Key != null;
+            [NotNull] public string Key { get; set; }
+            [NotNull] public string Value { get; set; }
+
+            public bool HasKey { get; set; }
 
             public bool IsValueTrue
             {
                 get
                 {
+                    const StringComparison Ignore = StringComparison.InvariantCultureIgnoreCase;
+
                     return Value != null &&
-                           ("True".Equals(Value, StringComparison.InvariantCultureIgnoreCase)
-                            || "On".Equals(Value, StringComparison.InvariantCultureIgnoreCase)
-                            || "Yes".Equals(Value, StringComparison.InvariantCultureIgnoreCase));
+                           ("True".Equals(Value, Ignore)
+                            || "On".Equals(Value, Ignore)
+                            || "Yes".Equals(Value, Ignore));
                 }
 
             }
@@ -33,12 +42,12 @@ namespace WaitFor.Common
 
         private ConnectionStringParser()
         {
-            LazyPairs = new Lazy<List<Pair>>(() => Parse_Impl());
+            _LazyPairs = new Lazy<List<Pair>>(() => Parse_Impl());
         }
 
         public ConnectionStringParser(string connectionString) : this()
         {
-            ConnectionString = connectionString;
+            ConnectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
 
 
@@ -56,25 +65,19 @@ namespace WaitFor.Common
                 int p = v.IndexOf('=');
                 if (p < 0)
                 {
-                    key = v;
-                    value = v;
+                    ret.Add(new Pair() { Key = v, Value = v, HasKey = false });
                 }
                 else
                 {
                     key = p > 0 ? v.Substring(0, p) : "";
                     value = p<v.Length-1 ? v.Substring(p + 1) : "";
+                    ret.Add(new Pair() { Key = key, Value = value, HasKey = true });
                 }
-
-                ret.Add(new Pair() { Key = key, Value = value});
             }
 
             return ret;
         }
 
-        public List<Pair> Pairs
-        {
-            get { return LazyPairs.Value; }
-        }
     }
 
     public static class ConnectionStringBuilderExtentions
