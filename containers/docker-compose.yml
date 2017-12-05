@@ -9,7 +9,7 @@ services:
         environment:
             WAIT_FOR_HttpGet: "http://hellorest/api/v1/ping"
             WAIT_FOR_MYSQL: "Server = mysql; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5; Pooling=false; "
-            WAIT_FOR_MySQL_2: "Server = mysql_another; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5; Pooling=false; "
+            WAIT_FOR_MySQL_2: "Server = mysql_57; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5; Pooling=false; "
             WAIT_FOR_PostgreSQL: "Host = postgres; Port=5432; User ID=postgres; Password=postgres; Database=postgres; Timeout = 5; Pooling=false; "
             WAIT_FOR_MongoDB: "mongodb://mongodb:27017"
             WAIT_FOR_RabbitMQ: "amqp://rabbitmq:5672"
@@ -35,7 +35,7 @@ services:
             WAIT_FOR_Ping_redis: "redis"
             WAIT_FOR_Ping_mongodb: "mongodb"
             WAIT_FOR_Ping_mysql1: "mysql"
-            WAIT_FOR_Ping_mysql2: "mysql_another"
+            WAIT_FOR_Ping_mysql2: "mysql_57"
         depends_on:
          - "mysql"
          - "redis"
@@ -54,7 +54,7 @@ services:
         ports:
          - "3304:3306"
 
-    mysql_another:
+    mysql_57:
         image: mysql:5.7
         restart: "no"
         environment:
