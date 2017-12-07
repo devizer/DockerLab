@@ -7,21 +7,19 @@ using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Text;
-using System.Xml.XPath;
 using Cassandra;
 using Dapper;
 using Enyim.Caching;
 using Enyim.Caching.Configuration;
 using Enyim.Caching.Memcached;
-using Microsoft.Extensions.Logging.Abstractions;
+using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Profiler;
 using MySql.Data.MySqlClient;
 using Npgsql;
 using RabbitMQ.Client;
 using StackExchange.Redis;
 
-namespace TheApp
+namespace WaitFor
 {
     class SimpleVersionInfo
     {
@@ -165,9 +163,10 @@ namespace TheApp
         {
             var client = new MongoClient(uri.Trim());
             var db = client.GetDatabase("admin");
-            db.Ping();
-            var ver = db.GetMongoServerVersionAsString();
-            return ver;
+            var pongOk = db.RunCommand<dynamic>(new BsonDocument("ping", 1)).ok;
+            var rawServerStatus = db.RunCommand<dynamic>(new BsonDocument("serverStatus", 1));
+            var version = (string) rawServerStatus.version;
+            return version;
         }
 
         private static string GoRabbitMQ(string s)

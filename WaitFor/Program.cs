@@ -1,7 +1,8 @@
 ﻿using System;
 using MongoDB.Profiler;
+using TheApp;
 
-namespace TheApp
+namespace WaitFor
 {
     class Program
     {
