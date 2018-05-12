@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace WaitFor.Common
@@ -58,6 +59,7 @@ namespace WaitFor.Common
 
             _Headers = new Lazy<IEnumerable<Header>>(() =>
             {
+
                 var lookup = Pairs
                     .Where(x => x.HasKey && x.Key.TrimStart().StartsWith("*"))
                     .ToLookup(x => x.Key.TrimStart(), x => x.Value);
@@ -72,13 +74,14 @@ namespace WaitFor.Common
                     });
                 }
 
+                // if (Debugger.IsAttached && ConnectionString.IndexOf("Smart") >= 0) Debugger.Break();
                 return ret;
             });
         }
 
         public class ExpectedStatusCodes
         {
-            private string _Raw = "100-499";
+            private string _Raw = "100-403,405-499";
             private List<int[]> Parsed;
 
             public static readonly ExpectedStatusCodes Any = new ExpectedStatusCodes("1-999999999");
@@ -110,13 +113,18 @@ namespace WaitFor.Common
 
             public bool IsValid(int status)
             {
+
                 foreach (var ints in Parsed)
                 {
-                    if (ints.Length == 1)
-                        if (ints[0] == status) return true;
+                    var intsLength = ints.Length;
 
-                    else if (ints.Length == 2)
-                        if (ints[0] <= status && ints[1] >= status) return true;
+                    if (intsLength == 1 && ints[0] == status)
+                        return true;
+
+                    else if (intsLength == 2
+                        && ints[0] <= status 
+                        && ints[1] >= status)
+                        return true;
                 }
 
                 return false;
@@ -127,6 +135,11 @@ namespace WaitFor.Common
         {
             public string Name { get; set; }
             public IEnumerable<string> Values { get; set; }
+
+            public override string ToString()
+            {
+                return $"{nameof(Name)}: {Name}, {nameof(Values)}: [{string.Join(",", Values)}]";
+            }
         }
 
 
