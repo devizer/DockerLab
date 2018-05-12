@@ -16,6 +16,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using MySql.Data.MySqlClient;
 using Npgsql;
+using Oracle.ManagedDataAccess.Client;
 using RabbitMQ.Client;
 using StackExchange.Redis;
 
@@ -37,6 +38,9 @@ namespace WaitFor
 
                 case ConnectionFamily.MSSQL:
                     return GoMSSQL(connectionString);
+
+                case ConnectionFamily.Oracle:
+                    return GoOracle(connectionString);
 
                 case ConnectionFamily.MongoDB:
                     return GoMongoDB(connectionString);
@@ -64,6 +68,7 @@ namespace WaitFor
 
             }
         }
+
 
         private static string GoHttpsGet(string connectionString)
         {
@@ -114,18 +119,29 @@ namespace WaitFor
         }
 
 
+        private static string GoOracle(string cs)
+        {
+            cs = cs.Trim();
+            using (OracleConnection con = new OracleConnection(cs))
+            {
+                con.Open();
+                string sql = "SELECT * FROM V$VERSION";
+                var ver = con.ExecuteScalar<string>(sql);
+                return ver;
+            }
+
+        }
+
         private static string GoMSSQL(string cs)
         {
             cs = cs.Trim();
-            string ver;
             using (SqlConnection con = new SqlConnection(cs))
             {
                 con.Open();
                 string sql = "Select Cast(ServerProperty('ProductVersion') as nvarchar) + ' [' + Cast(ServerProperty('Edition') as nvarchar) + ']';";
-                ver = con.ExecuteScalar<string>(sql);
+                var ver = con.ExecuteScalar<string>(sql);
+                return ver;
             }
-
-            return ver;
         }
 
         private static string GoRedis(string cs)

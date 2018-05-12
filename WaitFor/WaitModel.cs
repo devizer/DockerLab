@@ -9,6 +9,7 @@ namespace WaitFor
         MSSQL,
         MySQL,
         Postgres,
+        Oracle,
         RabbitMQ,
         MongoDB,
         Cassandra,

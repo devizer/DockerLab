@@ -43,6 +43,7 @@ namespace TheApp
                 {"MySQL=", "MySQL connection", v => Add(ConnectionFamily.MySQL, v)},
                 {"MSSQL=", "MS SQL connection", v => Add(ConnectionFamily.MSSQL, v)},
                 {"PostgreSQL=", "PostgreSQL connection", v => Add(ConnectionFamily.Postgres, v)},
+                {"Oracle=", "Oracle connection", v => Add(ConnectionFamily.Oracle, v)},
                 {"RabbitMQ=", "RabbitMQ connection", v => Add(ConnectionFamily.RabbitMQ, v)},
                 {"Cassandra=", "Cassandra connection", v => Add(ConnectionFamily.Cassandra, v)},
                 {"MongoDB=", "MongoDB Connection", v => Add(ConnectionFamily.MongoDB, v)},
