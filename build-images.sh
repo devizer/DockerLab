@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e
 printf "\n ------------- BUILD WaitFor as lab/theapp -------------\n"
 pushd WaitFor/bin/linux
 ./WaitFor -Timeout=3 -HttpGet=https://google.com/404
