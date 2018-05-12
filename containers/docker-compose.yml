@@ -149,7 +149,7 @@ services:
     oracle11xe:
         image: wnameless/oracle-xe-11g
         environment: 
-            ORACLE_ALLOW_REMOTE: true
+            ORACLE_ALLOW_REMOTE: "true"
         ports:
         - 1521
 
