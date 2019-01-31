@@ -267,7 +267,7 @@ namespace WaitFor
 
             MemcachedClientOptions opts = new MemcachedClientOptions();
             opts.Protocol = MemcachedProtocol.Binary;
-            var ipEndPoint = new IPEndPoint(address, port);
+            var ipEndPoint = new DnsEndPoint(host, port);
             var nullLoggerFactory = Microsoft.Extensions.Logging.Abstractions.NullLoggerFactory.Instance;
             MemcachedClientConfiguration config = new MemcachedClientConfiguration(nullLoggerFactory, opts);
             config.Servers.Add(ipEndPoint);
@@ -279,7 +279,7 @@ namespace WaitFor
 
             var mc = new MemcachedClient(nullLoggerFactory, config);
 
-            mc.Get(new [] { $"PING_({Guid.NewGuid().ToString("N")})" });
+            mc.Get( $"PING_({Guid.NewGuid().ToString("N")})");
             // return "OK. TryGet took " + (sw.ElapsedTicks / Convert.ToDecimal(Stopwatch.Frequency)).ToString("f2") + " msec";
 
             Stopwatch sw = Stopwatch.StartNew();
