@@ -147,6 +147,8 @@ services:
     # docker run --name oracle -d -p 49161:1521 -p 8080:8080 -e ORACLE_ENABLE_XDB=true wnameless/oracle-xe-11g
     # docker run --name oracle -p 1521:1521 -e ORACLE_ALLOW_REMOTE=true wnameless/oracle-xe-11g 
     # https://hub.docker.com/r/wnameless/oracle-xe-11g/
+    # DEBUG:
+    # docker run --name oracle_11g -p 1521:1521 -e ORACLE_ALLOW_REMOTE=true epiclabs/docker-oracle-xe-11g
     oracle11xe:
         image: epiclabs/docker-oracle-xe-11g
         environment: 
