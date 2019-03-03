@@ -5,7 +5,7 @@ services:
 
     theapp:
         image: lab/theapp
-        command: "-Timeout=240"
+        command: "-Timeout=60"
         environment:
             WAIT_FOR_HttpGet: "http://hellorest/api/v1/ping"
             WAIT_FOR_MYSQL: "Server = mysql; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5; Pooling=false; "
