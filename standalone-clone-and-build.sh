@@ -8,5 +8,3 @@ dotnet publish -v:m -c Debug -r $rid -o out --self-contained true DockerLab.sln
 export Wait_For_Ping=google.com
 export Wait_For_Ping_facebook=facebook.com
 WaitFor/out/WaitFor -Timeout=3 -HttpGet=https://google.com -HttpGet=https://facebook.com -Ping=localhost
-
-

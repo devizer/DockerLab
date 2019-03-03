@@ -1,0 +1,9 @@
+Headless ubuntu + docker + sql 2017 + sql 2019
+HOT START FROM HDD: 59 secs
+Cold START FROM HDD: 109 secs
+HOT Start from SSD: 40 secs
+Cold start from SSD: 61 secs
+
+Windows 2019 DC with Desktop + 8 SQL Servers
+Hot start from hdd 85 secs
+Cold start from hdd 390 sec (ping at 53rd sec)
