@@ -11,7 +11,7 @@ services:
             WAIT_FOR_MYSQL: "Server = mysql; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5; Pooling=false; "
             WAIT_FOR_MySQL_2: "Server = mysql_57; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5; Pooling=false; "
             WAIT_FOR_PostgreSQL: "Host = postgres; Port=5432; User ID=postgres; Password=postgres; Database=postgres; Timeout = 5; Pooling=false; "
-            Wait_For_Oracle_11g: "DATA SOURCE=oracle11xe:1521; USER ID=system; PASSWORD=oracle;Direct = true;SID=xe;CONNECTION TIMEOUT=3;"
+            Wait_For_Oracle_11g: "DATA SOURCE=oracle11xe:1521; USER ID=system; PASSWORD=oracle;Direct = true;Service Name=xe;CONNECTION TIMEOUT=3;"
             WAIT_FOR_MSSQL: "Data Source=sqlserver; User ID=sa; Password=~1qazxsw2; Timeout = 5; Pooling=false; "
             WAIT_FOR_MongoDB: "mongodb://mongodb:27017"
             WAIT_FOR_RabbitMQ: "amqp://rabbitmq:5672"
