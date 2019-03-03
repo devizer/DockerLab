@@ -154,6 +154,6 @@ services:
         environment: 
             ORACLE_ALLOW_REMOTE: "true"
         ports:
-        - "1521:1521"
+        - 1521
 
 
