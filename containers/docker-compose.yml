@@ -148,7 +148,7 @@ services:
     # docker run --name oracle -p 1521:1521 -e ORACLE_ALLOW_REMOTE=true wnameless/oracle-xe-11g 
     # https://hub.docker.com/r/wnameless/oracle-xe-11g/
     oracle11xe:
-        image: wnameless/oracle-xe-11g
+        image: epiclabs/docker-oracle-xe-11g
         environment: 
             ORACLE_ALLOW_REMOTE: "true"
         ports:
