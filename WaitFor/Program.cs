@@ -1,5 +1,6 @@
 ﻿using System;
 using MongoDB.Profiler;
+using Oracle.ManagedDataAccess.Client;
 using TheApp;
 
 namespace WaitFor
@@ -8,6 +9,7 @@ namespace WaitFor
     {
         static int Main(string[] args)
         {
+            // return DebugOracle();
 
             try
             {
@@ -23,6 +25,18 @@ namespace WaitFor
 
                 return 666;
             }
+        }
+
+        private static int DebugOracle()
+        {
+            var cs = "DATA SOURCE=192.168.0.18; USER ID=system; PASSWORD=oracle;CONNECTION TIMEOUT=3;";
+            OracleConnectionStringBuilder bb = new OracleConnectionStringBuilder(cs);
+            OracleConnection con = new OracleConnection(bb.ConnectionString);
+            con.Open();
+            con.Close();
+            var ver = SimpleVersionInfo.GoOracle(bb.ConnectionString);
+            Console.WriteLine("ORACLE Ver: " + ver);
+            return 0;
         }
 
         private static void WriteError(string text)

@@ -119,7 +119,7 @@ namespace WaitFor
         }
 
 
-        private static string GoOracle(string cs)
+        public static string GoOracle(string cs)
         {
             cs = cs.Trim();
             using (OracleConnection con = new OracleConnection(cs))
