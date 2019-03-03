@@ -7,6 +7,7 @@ services:
         image: lab/theapp
         command: "-Timeout=60"
         environment:
+            TZ: "Europe/Paris"
             WAIT_FOR_HttpGet: "http://hellorest/api/v1/ping"
             WAIT_FOR_MYSQL: "Server = mysql; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5; Pooling=false; "
             WAIT_FOR_MySQL_2: "Server = mysql_57; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5; Pooling=false; "
