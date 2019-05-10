@@ -3,7 +3,7 @@ os: linux
 dist: xenial
 sudo: required
 services:
-  - docker
+  # - docker
 mono: none
 dotnet: 2.2
 env:
@@ -12,6 +12,15 @@ env:
 
 script:
   - export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1; export DOTNET_CLI_TELEMETRY_OPTOUT=1;
+  - |
+     sudo apt-get update \
+  && sudo apt-get install apt-transport-https ca-certificates curl software-properties-common -y \
+  && (curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - ) \
+  && sudo apt-key fingerprint 0EBFCD88 \
+  && sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
+  && sudo apt-get update \
+  && sudo apt-get install docker-ce -y
+
   - docker --version
   - url=https://raw.githubusercontent.com/devizer/glist/master/install-dotnet-and-nodejs.sh; (wget -q -nv --no-check-certificate -O - $url 2>/dev/null || curl -ksSL $url) | bash -s dotnet
   - bash -e build-and-run-tests.sh 
