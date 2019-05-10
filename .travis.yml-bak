@@ -1,0 +1,14 @@
+os: linux
+dist: xenial
+sudo: required
+services:
+  - docker
+language: csharp
+mono: none
+dotnet: 2.2
+env:
+  global:
+  - secure: none
+
+script:
+  - bash -e build-and-run-tests.sh 
