@@ -10,10 +10,10 @@ export COMPOSE_PROJECT_NAME=lab
 docker network create --driver=bridge "$COMPOSE_PROJECT_NAME"_default
 time (docker-compose create);
 
-printf "\n ------------- RUN Test's dependencies -------------\n"
+printf "\n ------------- /SKIPPED/ RUN Test's dependencies -------------\n"
 test=theapp;
-other_services=$(docker-compose ps | tail -n +3 | awk '{print $1}' | grep -vE '(_'$test'_)')
-docker start $other_services; 
+# other_services=$(docker-compose ps | tail -n +3 | awk '{print $1}' | grep -vE '(_'$test'_)')
+# docker start $other_services; 
 
 printf "\n ------------- RUN Tests -------------\n"
 docker start -i "$COMPOSE_PROJECT_NAME"_"$test"_1; 
