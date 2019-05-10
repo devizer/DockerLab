@@ -13,4 +13,4 @@ docker-compose rm -f theapp
 echo "Kill all the services"; docker-compose -p lab kill; docker-compose -p lab rm -f
 
 # it will output into the log of all the services, will never stop
-docker-compose up --exit-code-from theapp | tee compose-up.log; exit;
+docker-compose up --exit-code-from theapp | tee compose-up.log; exit $?;
