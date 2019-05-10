@@ -20,7 +20,7 @@ export WAIT_FOR_MySQL="Server = mysql1; Port=3306; Uid = root; Pwd = your_passwo
 ```
 
 ## Root of this sandbox
-This [stack.yml](container/stack.yml) is a compose/stack composition defenition
+This [stack.yml](containers/docker-compose.yml) is a compose/stack composition defenition
 
 ## report
 Below is a fragment of `docker-compose up` with stack defenition above:
