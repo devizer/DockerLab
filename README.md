@@ -6,6 +6,7 @@ Here is a proof-of-concept for test-environment of an app with composed dbs (MS 
 
 It's a sandbox app which intended to check initialization of storage services. It supports native protocols of 5 kinds of storage/APIs:
 * MSSQL Server
+* Oracle
 * MongoDB
 * ProgreSQL
 * RabbitMQ
@@ -64,5 +65,5 @@ Below is a fragment of `docker-compose up` with stack defenition above:
 Full Report is available by travis-ci link above
 
 ## Build and run locally
-Just copy into shell the content of [clone-build-and-compose-up.sh](clone-build-and-compose-up.sh)
-Prerequesites: git, docker, docker-compose and dotnet sdk 2+
+Just copy into shell the content of [clone-build-and-compose-up.sh](standalone-clone-and-build-then-compose.sh)
+Prerequesites: git, docker, docker-compose and dotnet sdk 2.2+

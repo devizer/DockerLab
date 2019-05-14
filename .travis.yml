@@ -10,8 +10,7 @@ env:
   global:
   - secure: none
 
-script:
-  - export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1; export DOTNET_CLI_TELEMETRY_OPTOUT=1;
+install:
   - |
      sudo apt-get update \
           && sudo apt-get install apt-transport-https ca-certificates curl software-properties-common -y \
@@ -23,6 +22,8 @@ script:
 
   - apt-cache policy docker-ce
   - docker --version
+  - export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1; export DOTNET_CLI_TELEMETRY_OPTOUT=1;
   - url=https://raw.githubusercontent.com/devizer/glist/master/install-dotnet-and-nodejs.sh; (wget -q -nv --no-check-certificate -O - $url 2>/dev/null || curl -ksSL $url) | bash -s dotnet
-  # - bash -e build-and-run-tests.sh 
+
+script:
   - bash -e build-and-compose-up.sh 
