@@ -5,7 +5,7 @@ sudo: required
 services:
   # - docker
 mono: none
-dotnet: 2.2
+# dotnet: 2.2
 env:
   global:
   - secure: none
