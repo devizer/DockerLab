@@ -17,10 +17,10 @@ work=$HOME/transient-builds
 if [[ -d "/transient-builds" ]]; then work=/transient-builds; fi
 if [[ -d "/ssd" ]]; then work=/ssd/transient-builds; fi
 
-clone=$work/publish/WaitFor
-say "Clean WaitFor clone location: [$clone]"
+clone=$work/publish/parallel-wait-for
+say "Clean parallel-wait-for clone location: [$clone]"
 rm -rf $clone; mkdir -p $(dirname $clone)
-say "Loading WaitFor working copy"
+say "Loading parallel-wait-for working copy"
 if [ -n "${SKIP_GIT_PUSH:-}" ]; then waitForBinRepo=https://github.com/devizer/parallel-wait-for; else waitForBinRepo=git@github.com:devizer/parallel-wait-for; fi
 git clone ${waitForBinRepo} $clone
 
@@ -38,22 +38,33 @@ root=$(pwd)
 cd WaitFor
 dir=$(pwd)
 
-ver=not-changed
+ver=$(date --utc +"%a, %d %b %Y %T GMT")
+pushd Properties
+bash -e inc-version-info.sh
+var=$(cat version-number.txt).$(cat build-number.txt)
+popd
 
-for r in linux-musl-x64 rhel.6-x64 linux-x64 linux-arm linux-arm64 osx-x64; do
+for r in win-arm win-arm64 win-x86 win-x64 linux-musl-x64 rhel.6-x64 linux-x64 linux-arm linux-arm64 osx-x64; do
 
   say "Building $r [$ver]"
-  time SKIP_CLIENTAPP=true dotnet publish -c Release /p:DefineConstants="DUMPS" -o bin/$r --self-contained -r $r
+  time dotnet publish -c Release /p:DefineConstants="DUMPS" -o bin/$r --self-contained -r $r
   pushd bin/$r
-  chmod 644 *.dll
-  chmod 755 WaitFor
+  for ext in dll so txt a; do eval "ls *.${ext} >/dev/null 2>&1 && chmod 644 *.${ext} || true"; done
+  [[ -x WaitFor ]] && chmod 755 WaitFor
 
-  say "Compressing $r [$ver] as GZIP"
+  say "Compressing $r [$ver] as GZIP|ZIP"
   echo $ver > VERSION
-  compress="pigz -p 8 -b 128"
-  time sudo bash -c "tar cf - . | pv | $compress -9 > ../parallel-wait-for-$r.tar.gz"
-  sha256sum ../parallel-wait-for-$r.tar.gz | awk '{print $1}' > ../parallel-wait-for-$r.tar.gz.sha256
-  cp ../parallel-wait-for-$r.tar.gz* $clone/public/
+  if [[ $r == win* ]]; then
+    public_name=parallel-wait-for-$r.zip
+    7z a ../${public_name}
+  else
+    public_name=parallel-wait-for-$r.tar.gz 
+    compress="pigz -p 8 -b 128"
+    time sudo bash -c "tar cf - . | pv | $compress -9 > ../${public_name}"
+  fi
+  
+  sha256sum ../${public_name} | awk '{print $1}' > ../${public_name}.sha256
+  cp ../${public_name}* $clone/public/
   # say "Compressing $r [$ver] as XZ"
   # time sudo bash -c "tar cf - w3top | pv | xz -1 -z > ../w3top-$r.tar.xz"
   # say "Compressing $r [$ver] as 7z"
@@ -64,7 +75,7 @@ done
 
 if [ -n "${SKIP_GIT_PUSH:-}" ]; then exit; fi
 
-
+exit;
 
 pushd $clone >/dev/null
 git add --all .
