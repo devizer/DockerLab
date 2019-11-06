@@ -72,7 +72,7 @@ for r in win-arm win-arm64 win-x86 win-x64 linux-musl-x64 rhel.6-x64 linux-x64 l
 
   popd
 done
-
+echo $ver > $clone/public/VERSION
 if [ -n "${SKIP_GIT_PUSH:-}" ]; then exit; fi
 
 
