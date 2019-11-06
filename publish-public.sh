@@ -41,7 +41,7 @@ dir=$(pwd)
 ver=$(date --utc +"%a, %d %b %Y %T GMT")
 pushd Properties
 bash -e inc-version-info.sh
-ver=$(cat version-number.txt).$(cat build-number.txt)
+ver=$(cat full_version.txt)
 popd
 
 for r in win-arm win-arm64 win-x86 win-x64 linux-musl-x64 rhel.6-x64 linux-x64 linux-arm linux-arm64 osx-x64; do
