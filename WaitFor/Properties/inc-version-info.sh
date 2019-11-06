@@ -8,4 +8,4 @@ MYBUILD=$((MYBUILD + 1))
 echo NEW Build: "${MYBUILD}"
 echo ${MYBUILD} > build-number.txt
 
-echo "[assembly: System.Reflection.AssemblyVersion("${MYVERSION}.${MYBUILD}")]" | tee AssemblyVersion.cs
+echo "[assembly: System.Reflection.AssemblyVersion(\"${MYVERSION}.${MYBUILD}\")]" | tee AssemblyVersion.cs
