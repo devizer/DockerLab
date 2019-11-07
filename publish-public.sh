@@ -44,6 +44,8 @@ bash -e inc-version-info.sh
 ver=$(cat full_version.txt)
 popd
 
+dotnet restore --disable-parallel || true
+
 for r in linux-x64 linux-arm linux-arm64 osx-x64 linux-musl-x64 rhel.6-x64 win-arm win-arm64 win-x86 win-x64; do
 
   mkdir -p bin/warped-normal bin/warped-aggressive bin/warped-default
