@@ -5,10 +5,11 @@
       "commandLineArgs": "-Timeout=3 \"-MySQL=      Server = 192.168.0.8; Port=3306; Uid = mysql; Pwd = mysql; \"  \"-MySQL=      Server = 192.168.0.8; Port=3307; Uid = root; Pwd = example; \"  \"-PostgreSQL= Host = 192.168.0.8; Port=5432; User ID=postgres; Password=postgres; Database=postgres;\" \"-MongoDB=    mongodb://192.168.0.8:27017\"  \"-RabbitMQ=   amqp://192.168.0.8:5672\" \"-Redis=      192.168.0.8:6379\" \"-MSSQL=      Data Source = (local)\\SQL2005; Integrated Security=true;\" -Ping=google.com -Ping=google.com42 -HttpGet=https://google.com -HttpGet=https://google.com/404 -MemCached=192.168.0.8:11211 \"-Cassandra=Contact Points = 192.168.0.8; Port = 9042\"",
       "environmentVariables": {
         "Wait_For_Oracle_11g": "DATA SOURCE=192.168.0.8:1521;USER ID=system;PASSWORD=oracle",
+        "Wait_For_Http_404_Fail": "http://google.com/404",
         "Wait_For_Cassandra": "Contact Points = 192.168.0.8; Port = 9042",
         "WAIT_FOR_HttpGet_google": "https://google.com/?from_env",
-        "Wait_For_Http_404": "http://google.com/404",
         "Wait_For_Http": "http://google.com; Valid Status = 100-399; Timeout = 3",
+        "Wait_For_Http_404_OK": "http://google.com/404; Valid Status = 404; Timeout = 3",
         "Wait_For_HttpLegacy_Microsoft": "https://docs.microsoft.com",
         "Wait_For_HttpLegacy_oracle": "https://docs.oracle.com",
         "WAIT_FOR_MemCached": "localhost:11211"
