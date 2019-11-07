@@ -90,7 +90,7 @@ namespace Universe.HttpWaiter
             ret.Body = body;
             bool isValid = cs.ExpectedStatus.IsValid(statusInt);
             if (!isValid)
-                throw new InvalidOperationException($"Returned status code {statusInt} does not conform expected value '{cs.ExpectedStatus.OriginalString}'. Request: \"{cs.ConnectionString}\"");
+                throw new InvalidOperationException($"Returned status code {statusInt} does not conform expected '{cs.ExpectedStatus.OriginalString}'. Request: \"{cs.ConnectionString}\"");
 
             return ret;
         }
@@ -162,7 +162,7 @@ namespace Universe.HttpWaiter
             int statusInt = (int)statusCode;
             bool isValid = cs.ExpectedStatus.IsValid(statusInt);
             if (!isValid)
-                throw new InvalidOperationException($"Returned status code {statusInt} does not conform expected value '{cs.ExpectedStatus.OriginalString}'. Request: \"{cs.ConnectionString}\"");
+                throw new InvalidOperationException($"Returned status code {statusInt} does not conform expected '{cs.ExpectedStatus.OriginalString}'. Request: \"{cs.ConnectionString}\"");
 
 
         }

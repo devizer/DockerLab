@@ -29,7 +29,7 @@ namespace TheApp
 
         public static int WaitFor_Impl(string[] args)
         {
-            bool needHelp = false, needLogo = false, needVer = false;
+            bool needHelp = false, skipLogo = false, needVer = false;
             var appVer = Assembly.GetEntryAssembly().GetName().Version.ToString();
             var appVerShort = appVer;
             var date = AssemblyBuildDateTimeAttribute.CallerUtcBuildDate;
@@ -54,9 +54,9 @@ namespace TheApp
                 {"Http=", "any GET/POST/etc method with headers, payload and valid http-status codes", v => Add(ConnectionFamily.Http, v)},
                 {"Tcp=", "host:port or ip:port", v => Add(ConnectionFamily.Tcp, v)},
                 {"EnvPrefix=", "default is WAIT_FOR_", v => EnvPrefix = string.IsNullOrWhiteSpace(v) ? EnvPrefix : v.Trim()},
-                {"Version", "Show version", v => needVer = true},
+                {"v|Version", "Show version", v => needVer = true},
                 {"?|Help", "Display this help", v => needHelp = v != null},
-                {"nologo", "Hide logo", v => needLogo = v != null}
+                {"nl|NoLogo", "Hide logo", v => skipLogo = v != null}
             };
 
             p.Parse(args);
@@ -69,9 +69,9 @@ namespace TheApp
                 return 0;
             }
 
-            if (!needLogo)
+            if (!skipLogo)
             {
-                Console.WriteLine($"WaitFor {appVer} is living in docker {Environment.NewLine}");
+                Console.WriteLine($"WaitFor {appVer} {Environment.NewLine}");
             }
 
             if (needHelp)
@@ -79,6 +79,8 @@ namespace TheApp
                 StringBuilder b = new StringBuilder();
                 p.WriteOptionDescriptions(new StringWriter(b));
                 Console.WriteLine(b);
+                Console.WriteLine("Wanted dependencies accepted via both command line arguments above and environment variables.");
+                Console.WriteLine("The options and env var names are case insensitive.");
                 return 0;
             }
 
@@ -237,7 +239,12 @@ namespace TheApp
             const int captionLength = 16;
             var fore = Console.ForegroundColor;
 
-            string caption2 = item.Family == ConnectionFamily.Ping || item.Family == ConnectionFamily.HttpLegacy ? "Status" : "Version";
+            bool isSimple = item.Family ==
+                ConnectionFamily.Ping || item.Family == ConnectionFamily.HttpLegacy
+                                      || item.Family == ConnectionFamily.Tcp
+                                      || item.Family == ConnectionFamily.Http;
+
+            string caption2 = isSimple ? "Status" : "Version";
             if (item.Exception != null) caption2 = "Exception";
             var time = string.Format(" (at the {0} second, {1} try)", 
                 OrdinalNumbers.AddOrdinal((int) Math.Ceiling(item.OkTime)),
