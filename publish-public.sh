@@ -52,11 +52,11 @@ for r in linux-x64 linux-arm linux-arm64 osx-x64 linux-musl-x64 rhel.6-x64 win-a
   say "Warping Default $r [$ver]"
   dotnet-warp -r $r -o bin/warped-default/parallel-wait-for-$r -v 
 
-  say "Warping Normal $r [$ver]"
-  dotnet-warp -r $r -o bin/warped-normal/parallel-wait-for-$r -l Normal -v 
+  # say "Warping Normal $r [$ver]"
+  # dotnet-warp -r $r -o bin/warped-normal/parallel-wait-for-$r -l Normal -v 
 
-  say "Warping Aggressive $r [$ver]"
-  dotnet-warp -r $r -o bin/warped-aggressive/parallel-wait-for-$r -l Aggressive -v 
+  # say "Warping Aggressive $r [$ver]"
+  # dotnet-warp -r $r -o bin/warped-aggressive/parallel-wait-for-$r -l Aggressive -v 
 
   say "Building $r [$ver]"
   time dotnet publish -c Release /p:DefineConstants="DUMPS" -o bin/$r --self-contained -r $r
