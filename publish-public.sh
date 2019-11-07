@@ -81,14 +81,14 @@ git add --all .
 say "Commit binaries [$ver]"
 git commit -am "Update $ver"
 say "Publish binaries [$ver]"
-exit; #======================================
 git push
 popd >/dev/null
 
-exit
 
 say "Collecting garbage"
 bash $clone/git-gc/defrag.sh
+
+exit
 
 say "Delete bintray versions except stable [$ver]"
 export VERSION_STABLE="$ver"
