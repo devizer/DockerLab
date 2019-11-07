@@ -37,6 +37,8 @@ services:
             WAIT_FOR_Ping_mongodb: "mongodb"
             WAIT_FOR_Ping_mysql1: "mysql"
             WAIT_FOR_Ping_mysql2: "mysql_57"
+            Wait_For_Tcp: 'google.com:443'
+
         depends_on:
          - "mysql"
          - "redis"

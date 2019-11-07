@@ -17,7 +17,8 @@ namespace WaitFor
         Memcached,
         Ping,
         HttpLegacy,
-        Http
+        Http,
+        Tcp
     }
 
     public class WaitModel

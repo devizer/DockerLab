@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using Cassandra;
@@ -20,7 +21,9 @@ using Npgsql;
 using Oracle.ManagedDataAccess.Client;
 using RabbitMQ.Client;
 using StackExchange.Redis;
-using Universe.HttpWaiter;
+using WaitFor.Common;
+using HttpConnectionString = Universe.HttpWaiter.HttpConnectionString;
+using HttpProbe = Universe.HttpWaiter.HttpProbe;
 
 namespace WaitFor
 {
@@ -65,6 +68,9 @@ namespace WaitFor
                 case ConnectionFamily.Http:
                     return GoHttps(connectionString);
 
+                case ConnectionFamily.Tcp:
+                    return GoTcp(connectionString);
+
                 case ConnectionFamily.Memcached:
                     return GoMemcached(connectionString);
 
@@ -72,6 +78,33 @@ namespace WaitFor
                     throw new ArgumentOutOfRangeException($"Family {family} is not valid argument");
 
             }
+        }
+
+        private static string GoTcp(string connectionString)
+        {
+            var parts = connectionString.Split(':');
+            var host = connectionString;
+            int port = 80;
+            if (parts.Length == 2)
+            {
+                host = parts[0];
+                UInt32.TryParse(parts[1], out var port2);
+                port = (int) port2;
+            }
+
+            Stopwatch sw = Stopwatch.StartNew();
+
+            TcpClient client = new TcpClient();
+            using (client)
+            {
+                if (!client.ConnectAsync(host, port).Wait(3*1000))
+                {
+                    throw new Exception($"Tcp connection to {host}:{port} has timed out.");
+                }
+            }
+
+            var msecs = sw.ElapsedTicks / Convert.ToDecimal(Stopwatch.Frequency);
+            return $"OK. {msecs:f2} msecs";
         }
 
 
@@ -111,7 +144,7 @@ namespace WaitFor
         {
             HttpClient c = new HttpClient();
             var bytes = c.GetByteArrayAsync(connectionString).Result;
-            return $"OK. {bytes.Length} bytes recieved";
+            return $"OK. {bytes.Length} bytes received";
         }
 
         private static string GoPing(string connectionString)

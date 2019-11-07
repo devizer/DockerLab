@@ -52,6 +52,7 @@ namespace TheApp
                 {"Ping=", "Host or ip address", v => Add(ConnectionFamily.Ping, v)},
                 // {"HttpLegacy=", "https(s)://host:port/path", v => Add(ConnectionFamily.HttpLegacy, v)},
                 {"Http=", "any GET/POST/etc method with headers, payload and valid http-status codes", v => Add(ConnectionFamily.Http, v)},
+                {"Tcp=", "host:port or ip:port", v => Add(ConnectionFamily.Tcp, v)},
                 {"EnvPrefix=", "default is WAIT_FOR_", v => EnvPrefix = string.IsNullOrWhiteSpace(v) ? EnvPrefix : v.Trim()},
                 {"Version", "Show version", v => needVer = true},
                 {"?|Help", "Display this help", v => needHelp = v != null},
