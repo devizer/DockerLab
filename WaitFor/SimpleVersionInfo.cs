@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Text;
+using System.Threading;
 using Cassandra;
 using Dapper;
 using Enyim.Caching;
@@ -19,6 +20,7 @@ using Npgsql;
 using Oracle.ManagedDataAccess.Client;
 using RabbitMQ.Client;
 using StackExchange.Redis;
+using Universe.HttpWaiter;
 
 namespace WaitFor
 {
@@ -57,8 +59,11 @@ namespace WaitFor
                 case ConnectionFamily.Ping:
                     return GoPing(connectionString);
 
-                case ConnectionFamily.HttpGet:
-                    return GoHttpsGet(connectionString);
+                case ConnectionFamily.HttpLegacy:
+                    return GoHttpsLegacy(connectionString);
+
+                case ConnectionFamily.Http:
+                    return GoHttps(connectionString);
 
                 case ConnectionFamily.Memcached:
                     return GoMemcached(connectionString);
@@ -70,12 +75,12 @@ namespace WaitFor
         }
 
 
-        private static string GoHttpsGet(string connectionString)
+        private static string GoHttpsLegacy(string connectionString)
         {
             Stopwatch startAt = Stopwatch.StartNew();
             HttpClient c = new HttpClient();
             var response = c.GetAsync(connectionString).Result;
-            var statusCode = response.StatusCode;
+            HttpStatusCode statusCode = response.StatusCode;
             IEnumerable<string> values;
             var server =
                 response.Headers.TryGetValues("server", out values)
@@ -83,8 +88,24 @@ namespace WaitFor
                     : "N/A";
             
             var bytes = response.Content.ReadAsByteArrayAsync().Result;
-            return $"{statusCode} ({(int)statusCode}). Server: {server}. {bytes.Length} bytes recieved";
+            return $"{statusCode} ({(int)statusCode}). Server: {server}. {bytes.Length} bytes received";
         }
+
+        private static string GoHttps(string connectionString)
+        {
+            var cs = new HttpConnectionString(connectionString);
+            var probeResult = HttpProbe.Go(cs, CancellationToken.None).Result;
+            var server =
+                probeResult.Headers
+                    .FirstOrDefault(x => "server".Equals(x.Key, StringComparison.InvariantCultureIgnoreCase))
+                    .Value?.FirstOrDefault();
+
+            if (string.IsNullOrEmpty(server)) server = "N/A";
+
+            return $"{(HttpStatusCode)probeResult.StatusCode} ({probeResult.StatusCode}). Server: {server}. {probeResult.Body.Length} bytes received";
+        }
+
+
 
         private static string GoHttpsGet_Strict(string connectionString)
         {

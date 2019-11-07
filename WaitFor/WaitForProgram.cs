@@ -50,11 +50,12 @@ namespace TheApp
                 {"Redis=", "Redis Connection", v => Add(ConnectionFamily.Redis, v)},
                 {"Memcached=", "Memcached Connection", v => Add(ConnectionFamily.Memcached, v)},
                 {"Ping=", "Host or ip address", v => Add(ConnectionFamily.Ping, v)},
-                {"HttpGet=", "https(s)://host:port/path", v => Add(ConnectionFamily.HttpGet, v)},
+                // {"HttpLegacy=", "https(s)://host:port/path", v => Add(ConnectionFamily.HttpLegacy, v)},
+                {"Http=", "any GET/POST/etc method with headers, payload and valid http-status codes", v => Add(ConnectionFamily.Http, v)},
                 {"EnvPrefix=", "default is WAIT_FOR_", v => EnvPrefix = string.IsNullOrWhiteSpace(v) ? EnvPrefix : v.Trim()},
-                {"v|Version", "Show version", v => needVer = true},
-                {"h|?|Help", "Display this help", v => needHelp = v != null},
-                {"n|nologo", "Hide logo", v => needLogo = v != null}
+                {"Version", "Show version", v => needVer = true},
+                {"?|Help", "Display this help", v => needHelp = v != null},
+                {"nologo", "Hide logo", v => needLogo = v != null}
             };
 
             p.Parse(args);
@@ -235,7 +236,7 @@ namespace TheApp
             const int captionLength = 16;
             var fore = Console.ForegroundColor;
 
-            string caption2 = item.Family == ConnectionFamily.Ping || item.Family == ConnectionFamily.HttpGet ? "Status" : "Version";
+            string caption2 = item.Family == ConnectionFamily.Ping || item.Family == ConnectionFamily.HttpLegacy ? "Status" : "Version";
             if (item.Exception != null) caption2 = "Exception";
             var time = string.Format(" (at the {0} second, {1} try)", 
                 OrdinalNumbers.AddOrdinal((int) Math.Ceiling(item.OkTime)),

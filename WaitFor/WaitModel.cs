@@ -16,7 +16,8 @@ namespace WaitFor
         Redis,
         Memcached,
         Ping,
-        HttpGet
+        HttpLegacy,
+        Http
     }
 
     public class WaitModel
