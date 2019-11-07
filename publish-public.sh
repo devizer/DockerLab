@@ -85,9 +85,10 @@ git push
 popd >/dev/null
 
 
-say "Collecting garbage"
+say "Collecting garbage [$ver]"
 bash $clone/git-gc/defrag.sh
 
+say "Done [$ver]"
 exit
 
 say "Delete bintray versions except stable [$ver]"
