@@ -48,6 +48,7 @@ for r in linux-x64 linux-arm linux-arm64 osx-x64 linux-musl-x64 rhel.6-x64 win-a
 
   mkdir -p bin/warped-normal bin/warped-aggressive bin/warped-default
   say "Warping Default $r [$ver]"
+  printenv
   dotnet-warp -r $r -o bin/warped-default/parallel-wait-for-$r -v 
 
   say "Warping Normal $r [$ver]"
