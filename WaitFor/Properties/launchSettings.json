@@ -8,7 +8,7 @@
         "Wait_For_Cassandra": "Contact Points = 192.168.0.8; Port = 9042",
         "WAIT_FOR_HttpGet_google": "https://google.com/?from_env",
         "Wait_For_Http_404": "http://google.com/404",
-        "Wait_For_Http": "http://google.com; Valid Status = 100-399; Timeout = 1",
+        "Wait_For_Http": "http://google.com; Valid Status = 100-399; Timeout = 3",
         "Wait_For_HttpLegacy_Microsoft": "https://docs.microsoft.com",
         "Wait_For_HttpLegacy_oracle": "https://docs.oracle.com",
         "WAIT_FOR_MemCached": "localhost:11211"
