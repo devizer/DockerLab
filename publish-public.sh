@@ -46,12 +46,15 @@ popd
 
 for r in linux-x64 linux-arm linux-arm64 osx-x64 linux-musl-x64 rhel.6-x64 win-arm win-arm64 win-x86 win-x64; do
 
-  mkdir -p bin/warped-normal bin/warped-agressive
-  say "Warping Normal $r [$ver]"
-  dotnet-warp -r $r -o bin/warped-normal/parallel-wait-for-$r -l Normal -v 
+  mkdir -p bin/warped-normal bin/warped-aggressive bin/warped-default
+  say "Warping Default $r [$ver]"
+  dotnet-warp -r $r -o bin/warped-default/parallel-wait-for-$r 
 
   say "Warping Normal $r [$ver]"
-  dotnet-warp -r $r -o bin/warped-agressive/parallel-wait-for-$r -l Agressive -v 
+  # dotnet-warp -r $r -o bin/warped-normal/parallel-wait-for-$r -l Normal -v 
+
+  say "Warping Aggressive $r [$ver]"
+  # dotnet-warp -r $r -o bin/warped-aggressive/parallel-wait-for-$r -l Aggressive -v 
 
   say "Building $r [$ver]"
   time dotnet publish -c Release /p:DefineConstants="DUMPS" -o bin/$r --self-contained -r $r
