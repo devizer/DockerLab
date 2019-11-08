@@ -1,0 +1,164 @@
+version: '3.1'
+
+services:
+
+    hellorest:
+        build: ./bin/HelloRest
+        image: local/hello-rest
+        environment:
+            ASPNETCORE_URLS: "http://+:80"
+        ports:
+        - "5678:80"
+
+    theapp:
+        build: ./bin/WaitFor
+        image: local/hello-rest
+        command: "-Timeout=60"
+        environment:
+            TZ: "Europe/Paris"
+            WAIT_FOR_Http: "http://hellorest/api/v1/ping"
+            WAIT_FOR_MYSQL: "Server = mysql; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5; Pooling=false; "
+            WAIT_FOR_MySQL_2: "Server = mysql_57; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5; Pooling=false; "
+            WAIT_FOR_PostgreSQL: "Host = postgres; Port=5432; User ID=postgres; Password=postgres; Database=postgres; Timeout = 5; Pooling=false; "
+            Wait_For_Oracle_11g: "DATA SOURCE=oracle11xe; USER ID=system; PASSWORD=oracle;CONNECTION TIMEOUT=3"
+            WAIT_FOR_MSSQL: "Data Source=sqlserver; User ID=sa; Password=~1qazxsw2; Timeout = 5; Pooling=false; "
+            WAIT_FOR_MongoDB: "mongodb://mongodb:27017"
+            WAIT_FOR_RabbitMQ: "amqp://rabbitmq:5672"
+            WAIT_FOR_Cassandra: "Contact Points = cassandra; Port = 9042"
+            WAIT_FOR_Redis: "redis:6379"
+            WAIT_FOR_Redis_another: "redis_another:6379"
+            WAIT_FOR_MemCached_1: "memcached:11211"
+            WAIT_FOR_Http_google: "https://google.com"
+            WAIT_FOR_Http_google_404: 'https://google.com/404; Valid Status = 404; Timeout = 3'
+            WAIT_FOR_Http_adminer: "http://adminer:8080"
+            WAIT_FOR_Ping_nginx1: "nginx1"
+            WAIT_FOR_Ping_nginx2: "nginx2"
+            WAIT_FOR_Http_nginx1: "http://nginx1"
+            WAIT_FOR_Http_nginx2: "http://nginx2"
+            WAIT_FOR_Http_ms_docs: "https://docs.microsoft.com"
+            WAIT_FOR_Http_portal_azure: "https://portal.azure.com"
+            WAIT_FOR_Http_oracle_docs: "https://docs.oracle.com"
+            WAIT_FOR_Http_nginx2: "http://nginx2"
+            WAIT_FOR_Http_nginx2: "http://nginx2"
+            WAIT_FOR_Ping_google: "google.com"
+            WAIT_FOR_Ping_redis: "redis"
+            WAIT_FOR_Ping_sqlserver: "sqlserver"
+            WAIT_FOR_Ping_mongodb: "mongodb"
+            WAIT_FOR_Ping_mysql1: "mysql"
+            WAIT_FOR_Ping_mysql2: "mysql_57"
+            Wait_For_Tcp: 'google.com:443'
+
+        depends_on:
+         - "hellorest"
+         - "mysql"
+         - "redis"
+         - "postgres"
+         - "mongodb"
+         - "rabbitmq"
+         - "sqlserver"
+         - "oracle11xe"
+
+    mysql:
+        image: mysql:5.5
+        restart: "no"
+        environment:
+            MYSQL_ROOT_PASSWORD: example
+        volumes:
+         - "./custom.cnf:/etc/mysql/conf.d/custom.cnf"
+        ports:
+         - "3304:3306"
+
+    mysql_57:
+        image: mysql:5.7
+        restart: "no"
+        environment:
+            MYSQL_ROOT_PASSWORD: example
+        # volumes:
+        # - "./custom.cnf:/etc/mysql/conf.d/custom.cnf"
+        ports:
+         - "3305:3306"
+
+    redis:
+        image: redis
+        restart: "no"
+        ports:
+        - "6379:6379"
+
+    redis_another:
+        image: redis:3.2
+        restart: "no"
+        ports:
+        - "6378:6379"
+
+    postgres:
+        image: postgres:9.4
+        restart: "no"
+        environment:
+            POSTGRES_PASSWORD: postgres
+        ports:
+        - "5432"
+
+    mongodb:
+        image: mongo:3.4
+        restart: "no"
+        ports:
+        - "27017"
+
+    rabbitmq:
+        image: rabbitmq:3.4
+        restart: "no"
+        ports:
+        - "5672"
+
+    sqlserver:
+        image: microsoft/mssql-server-linux
+        restart: "no"
+        environment:
+            ACCEPT_EULA: Y 
+            SA_PASSWORD: ~1qazxsw2
+            MSSQL_PID: Developer
+        ports:
+        - "1433"
+
+    memcached:
+        image: memcached
+        restart: "no"
+        ports:
+        - "11211"
+
+    nginx1:
+        image: nginx
+        ports:
+        - "8091:80"
+        command: [nginx-debug, '-g', 'daemon off;']
+
+    nginx2:
+        image: nginx
+        ports:
+        - "8092:80"
+        command: [nginx-debug, '-g', 'daemon off;']
+
+    adminer:
+        image: adminer
+        restart: "no"
+        ports:
+        - "8080:8080"
+
+    cassandra:
+        image: cassandra:2.1
+        ports:
+        - "9042:9042"
+
+    # docker run --name oracle -d -p 49161:1521 -p 8080:8080 -e ORACLE_ENABLE_XDB=true wnameless/oracle-xe-11g
+    # docker run --name oracle -p 1521:1521 -e ORACLE_ALLOW_REMOTE=true wnameless/oracle-xe-11g 
+    # https://hub.docker.com/r/wnameless/oracle-xe-11g/
+    # DEBUG:
+    # docker run -it --name oracle_11g -p 1521:1521 -e ORACLE_ALLOW_REMOTE=true epiclabs/docker-oracle-xe-11g
+    oracle11xe:
+        image: epiclabs/docker-oracle-xe-11g
+        environment: 
+            ORACLE_ALLOW_REMOTE: "true"
+        ports:
+        - 1521
+
+
