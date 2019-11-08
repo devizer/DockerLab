@@ -2,6 +2,6 @@
 for prj in WaitFor HelloRest; do
   pushd ../$prj
   # mkdir -p ../compose/bin/$prj
-  dotnet publish -o ../compose/bin/$prj
+  dotnet publish -o ../compose/bin/$prj -r linux-x64
   popd
 done

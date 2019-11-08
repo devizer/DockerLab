@@ -4,7 +4,7 @@ services:
 
     hellorest:
         build: ./bin/HelloRest
-        image: local/hello-rest
+        image: local-waitfor/hello-rest
         environment:
             ASPNETCORE_URLS: "http://+:80"
         ports:
@@ -12,7 +12,7 @@ services:
 
     theapp:
         build: ./bin/WaitFor
-        image: local/wait-for
+        image: local-waitfor/wait-for
         command: "-Timeout=60"
         environment:
             TZ: "Europe/Paris"
