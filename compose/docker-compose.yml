@@ -12,7 +12,7 @@ services:
 
     theapp:
         build: ./bin/WaitFor
-        image: local/hello-rest
+        image: local/wait-for
         command: "-Timeout=60"
         environment:
             TZ: "Europe/Paris"
