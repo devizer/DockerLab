@@ -165,7 +165,5 @@ namespace Universe.HttpWaiter
                     || "Yes".Equals(v, Ignore));
 
         }
-
     }
-
 }
