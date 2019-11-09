@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Security;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,7 +19,19 @@ namespace Universe.HttpWaiter
             if (cancellationToken == default(CancellationToken))
                 cancellationToken = CancellationToken.None;
 
-            HttpClient c = new HttpClient()
+            // SslProtocols _SslProtocols = SslProtocols.Tls | SslProtocols.Tls11 | SslProtocols.Tls12;
+            Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool> sslCallback =
+                (message, certificate2, chain, sslErrors) =>
+                {
+                    return sslErrors == SslPolicyErrors.None || cs.AllowUntrusted;
+                };
+            
+            HttpMessageHandler mHandler = new HttpClientHandler()
+            {
+                ServerCertificateCustomValidationCallback = sslCallback
+            };
+            
+            HttpClient c = new HttpClient(mHandler)
             {
                 Timeout = TimeSpan.FromSeconds(cs.Timeout),
             };
@@ -100,7 +115,19 @@ namespace Universe.HttpWaiter
             if (cancellationToken == default(CancellationToken))
                 cancellationToken = CancellationToken.None;
 
-            HttpClient c = new HttpClient()
+            // SslProtocols _SslProtocols = SslProtocols.Tls | SslProtocols.Tls11 | SslProtocols.Tls12;
+            Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool> sslCallback =
+                (message, certificate2, chain, sslErrors) =>
+                {
+                    return sslErrors == SslPolicyErrors.None || cs.AllowUntrusted;
+                };
+            
+            HttpMessageHandler mHandler = new HttpClientHandler()
+            {
+                ServerCertificateCustomValidationCallback = sslCallback
+            };
+            
+            HttpClient c = new HttpClient(mHandler)
             {
                 Timeout = TimeSpan.FromSeconds(cs.Timeout),
             };

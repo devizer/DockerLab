@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 
 namespace Universe.HttpWaiter
 {
-    // Valid Status=200,403,100-499; Uri=http://mywebapi:80/status; Method=POST; Accept=application/json, text/javascript; Payload={'verbosity':'normal'}"
+    // Valid Status=200,403,100-499; Uri=http://mywebapi:80/status; Allow Untrusted = true; Method=POST; Accept=application/json, text/javascript; Payload={'verbosity':'normal'}"
     public class HttpConnectionString : ConnectionStringParser
     {
         private Lazy<string> _Uri;
@@ -13,6 +14,7 @@ namespace Universe.HttpWaiter
         private Lazy<int> _Timeout;
         private Lazy<IEnumerable<Header>> _Headers;
         private Lazy<string> _Payload;
+        private Lazy<bool> _AllowUntrusted;
 
         public string Uri => _Uri.Value;
 
@@ -25,6 +27,8 @@ namespace Universe.HttpWaiter
         public string Payload => _Payload.Value;
 
         public string Method => _Method.Value;
+
+        public bool AllowUntrusted => _AllowUntrusted.Value;
 
         public HttpConnectionString(string connectionString) : base(connectionString)
         {
@@ -54,6 +58,11 @@ namespace Universe.HttpWaiter
             {
                 string v = Pairs.GetFirstString("Valid Status");
                 return v == null ? ExpectedStatusCodes.Normal : new ExpectedStatusCodes(v);
+            });
+            
+            _AllowUntrusted = new Lazy<bool>(() =>
+            {
+                return Pairs.GetFirstBool("Allow Untrusted", true);
             });
 
             _Headers = new Lazy<IEnumerable<Header>>(() =>
