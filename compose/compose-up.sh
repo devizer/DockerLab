@@ -5,4 +5,4 @@ set -e
 
 bash -e v2-build.sh
 time docker-compose up --no-start --build --force-recreate 
-docker-compose up --exit-code-from theapp
+time docker-compose up --exit-code-from theapp
