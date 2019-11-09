@@ -2,13 +2,7 @@ language: minimal
 os: linux
 dist: trusty
 sudo: required
-services:
-  # - docker
 mono: none
-# dotnet: 2.2
-# env:
-#  global:
-#  - secure: none
 
 install:
   - |
