@@ -11,9 +11,10 @@ using System.Threading.Tasks;
 
 namespace WaitFor.Common
 {
-    public class HttpProbe
+    [Obsolete]
+    public class HttpProbe_Obsolete
     {
-        public static async Task Go(HttpConnectionString cs, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task Go(HttpConnectionString_Obsolete cs, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (cancellationToken == default(CancellationToken))
                 cancellationToken = CancellationToken.None;
@@ -31,7 +32,7 @@ namespace WaitFor.Common
             if (cs.Payload != null)
                 req.Content = new StringContent(cs.Payload);
 
-            var copy = new List<HttpConnectionString.Header>(cs.Headers.ToList());
+            var copy = new List<HttpConnectionString_Obsolete.Header>(cs.Headers.ToList());
             var contentType = copy.FirstOrDefault(x => "Content-Type".Equals(x.Name, StringComparison.InvariantCultureIgnoreCase));
             if (contentType != null)
             {

@@ -6,7 +6,8 @@ using System.Linq;
 namespace WaitFor.Common
 {
     // Valid Status=200,403,100-499; Uri=http://mywebapi:80/status; Method=POST; Accept=application/json, text/javascript; Payload={'verbosity':'normal'}"
-    public class HttpConnectionString : ConnectionStringParser
+    [Obsolete]
+    public class HttpConnectionString_Obsolete : ConnectionStringParser
     {
         private Lazy<string> _Uri;
         private Lazy<ExpectedStatusCodes> _ExpectedStatus;
@@ -27,7 +28,7 @@ namespace WaitFor.Common
 
         public string Method => _Method.Value;
 
-        public HttpConnectionString(string connectionString) : base(connectionString)
+        public HttpConnectionString_Obsolete(string connectionString) : base(connectionString)
         {
             _Uri = new Lazy<string>(() =>
             {

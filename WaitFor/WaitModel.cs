@@ -31,11 +31,14 @@ namespace WaitFor
         public WaitModel Clone()
         {
             lock (Sync)
+            {
                 return new WaitModel()
                 {
                     Connections = new List<ConnectionInfo>(Connections.Select(x => x.Clone())),
                     StartAt = StartAt,
+                    Timeout = Timeout,
                 };
+            }
         }
     }
 
