@@ -6,9 +6,9 @@ services:
   # - docker
 mono: none
 # dotnet: 2.2
-env:
-  global:
-  - secure: none
+# env:
+#  global:
+#  - secure: none
 
 install:
   - |
