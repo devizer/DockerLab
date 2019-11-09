@@ -133,7 +133,7 @@ namespace WaitFor
                     .FirstOrDefault(x => "server".Equals(x.Key, StringComparison.InvariantCultureIgnoreCase))
                     .Value?.FirstOrDefault();
 
-            if (string.IsNullOrEmpty(server)) server = "N/A";
+            var serverInfo = !string.IsNullOrEmpty(server) ? $" Server: {server}." : "";
             
             var contentType =
                 probeResult.Headers
@@ -144,7 +144,7 @@ namespace WaitFor
 
             var contentTypeInfo = string.IsNullOrEmpty(contentType) ? "" : $" [{contentType}]";
             
-            return $"{(HttpStatusCode)probeResult.StatusCode} ({probeResult.StatusCode}). Server: {server}. {probeResult.ContentLength} bytes{contentTypeInfo} received";
+            return $"{(HttpStatusCode)probeResult.StatusCode} ({probeResult.StatusCode}).{serverInfo} {probeResult.ContentLength} bytes{contentTypeInfo} received";
         }
 
 
