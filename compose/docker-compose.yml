@@ -19,6 +19,7 @@ services:
             WAIT_FOR_Http: "http://hellorest/api/v1/ping"
             WAIT_FOR_MYSQL_55: "Server = mysql_55; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5; Pooling=false; "
             WAIT_FOR_MySQL_57: "Server = mysql_57; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5; Pooling=false; "
+            WAIT_FOR_MySQL_80: "Server = mysql_80; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5; Pooling=false; "
             WAIT_FOR_PostgreSQL: "Host = postgres; Port=5432; User ID=postgres; Password=postgres; Database=postgres; Timeout = 5; Pooling=false; "
             Wait_For_Oracle_11g: "DATA SOURCE=oracle11xe; USER ID=system; PASSWORD=oracle;CONNECTION TIMEOUT=3"
             WAIT_FOR_MSSQL: "Data Source=sqlserver; User ID=sa; Password=~1qazxsw2; Timeout = 5; Pooling=false; "
@@ -73,9 +74,19 @@ services:
         environment:
             MYSQL_ROOT_PASSWORD: example
         volumes:
-         - "./mysql.custom.cnf:/etc/mysql/conf.d/mysql.custom.cnf"
+            - "./mysql.custom.cnf:/etc/mysql/conf.d/mysql.custom.cnf"
         ports:
-         - "3305:3306"
+            - "3305:3306"
+
+    mysql_80:
+        image: mysql:8.0
+        restart: "no"
+        environment:
+            MYSQL_ROOT_PASSWORD: example
+        volumes:
+            - "./mysql.custom.cnf:/etc/mysql/conf.d/mysql.custom.cnf"
+        ports:
+            - "3316:3306"
 
     redis:
         image: redis
