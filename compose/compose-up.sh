@@ -4,5 +4,5 @@ set -e
 # docker images --format "{{.ID}} {{.Repository}}" -q -a | grep local-waitfor | awk '{print $1}' | xargs docker rmi -f || true
 
 bash -e v2-build.sh
-docker-compose up --no-start --build --force-recreate 
+time docker-compose up --no-start --build --force-recreate 
 docker-compose up --exit-code-from theapp
