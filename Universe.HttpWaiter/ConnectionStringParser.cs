@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 
 namespace Universe.HttpWaiter
 {
-    // Valid Status=200,403,100-499; Uri=http://mywebapi:80/get-status; Method=POST; *Accept=application/json, text/javascript; Payload={'verbosity':'normal'}"
+    // Valid Status=200,403,100-499; Uri=http://mywebapi:80/get-status; Allow Untrusted = true; Method=POST; *Accept=application/json, text/javascript; Payload={'verbosity':'normal'}"
     /*
      * Built-in System.Data.Common.DbConnectionStringBuilder has limitation:
      * All the keys are lower-cased
