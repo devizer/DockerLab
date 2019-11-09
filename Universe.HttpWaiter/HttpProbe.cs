@@ -108,14 +108,15 @@ namespace Universe.HttpWaiter
             bool isValid = cs.ExpectedStatus.IsValid(statusInt);
             if (!isValid)
                 throw new InvalidOperationException($"Returned status code {statusInt} does not conform expected '{cs.ExpectedStatus.OriginalString}'. Request: \"{cs.ConnectionString}\"");
-            
 
-            var bodyStream = await response.Content.ReadAsStreamAsync();
-            StreamWithCounters streamCopy = new StreamWithCounters(Stream.Null);
-            bodyStream.CopyTo(streamCopy);
-            var totalBytes = streamCopy.TotalWrittenBytes;
-            ret.ContentLength = totalBytes;
-            
+            using (var bodyStream = await response.Content.ReadAsStreamAsync())
+            {
+                StreamWithCounters streamCopy = new StreamWithCounters(Stream.Null);
+                bodyStream.CopyTo(streamCopy);
+                var totalBytes = streamCopy.TotalWrittenBytes;
+                ret.ContentLength = totalBytes;
+            }
+
             // var body = await response.Content.ReadAsByteArrayAsync();
             // ret.Body = body;
 
