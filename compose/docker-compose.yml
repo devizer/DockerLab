@@ -13,7 +13,7 @@ services:
     theapp:
         build: ./bin/WaitFor
         image: local-waitfor/wait-for
-        command: "-Timeout=60"
+        command: "-Timeout=90"
         environment:
             TZ: "Europe/Paris"
             WAIT_FOR_Http: "http://hellorest/api/v1/ping"
