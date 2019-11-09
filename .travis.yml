@@ -36,5 +36,4 @@ script:
 
 cache:
   directories:
-    - '/home/travis/.local/share/NuGet/'
-    - '/home/travis/.nuget/'
+    - '/home/travis/.local/share/NuGet/v3-cache/'
