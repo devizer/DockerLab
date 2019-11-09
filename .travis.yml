@@ -32,5 +32,5 @@ install:
 
 
 script:
-  # - bash -e build-and-compose-up.sh 
+    - dotnet restore --disable-parallel 
     - cd compose && bash -e compose-up.sh
