@@ -187,7 +187,7 @@ namespace TheApp
             );
 
 
-            return 0;
+            return Model.Connections.Count(x => !x.IsOk);
         }
 
         // Single Threaded only
