@@ -92,7 +92,7 @@ namespace TheApp
             }
             
             ThreadPool.GetMinThreads(out var minWorkingThreads, out var minCompletionPortThreads);
-            minWorkingThreads = Math.Max(Model.Connections.Count, minWorkingThreads) + 2;
+            minWorkingThreads = Math.Max(Model.Connections.Count, minWorkingThreads) + 6;
             ThreadPool.SetMinThreads(minWorkingThreads, minCompletionPortThreads);
 
             Console.WriteLine(startup + Environment.NewLine);
