@@ -38,8 +38,6 @@ services:
             WAIT_FOR_Http_ms_docs: "https://docs.microsoft.com"
             WAIT_FOR_Http_portal_azure: "https://portal.azure.com"
             WAIT_FOR_Http_oracle_docs: "https://docs.oracle.com"
-            WAIT_FOR_Http_nginx2: "http://nginx2"
-            WAIT_FOR_Http_nginx2: "http://nginx2"
             WAIT_FOR_Ping_google: "google.com"
             WAIT_FOR_Ping_redis: "redis"
             WAIT_FOR_Ping_sqlserver: "sqlserver"
