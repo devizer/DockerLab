@@ -90,6 +90,10 @@ namespace TheApp
                 startup.AppendLine();
                 startup.Append(Format(m.Family.ToString(), m.ConnectionString));
             }
+            
+            ThreadPool.GetMinThreads(out var minWorkingThreads, out var minCompletionPortThreads);
+            minWorkingThreads = Math.Max(Model.Connections.Count, minWorkingThreads) + 2;
+            ThreadPool.SetMinThreads(minWorkingThreads, minCompletionPortThreads);
 
             Console.WriteLine(startup + Environment.NewLine);
 
