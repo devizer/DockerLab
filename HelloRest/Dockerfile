@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.2-runtime
+FROM microsoft/dotnet:2.2-aspnetcore-runtime
 WORKDIR /HelloRest
 COPY . /HelloRest
-ENTRYPOINT [ "./HelloRest" ]
+ENTRYPOINT [ "dotnet", "./HelloRest.dll" ]
