@@ -17,8 +17,8 @@ services:
         environment:
             TZ: "Europe/Paris"
             WAIT_FOR_Http: "http://hellorest/api/v1/ping"
-            WAIT_FOR_MYSQL: "Server = mysql; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5; Pooling=false; "
-            WAIT_FOR_MySQL_2: "Server = mysql_57; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5; Pooling=false; "
+            WAIT_FOR_MYSQL_55: "Server = mysql_55; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5; Pooling=false; "
+            WAIT_FOR_MySQL_57: "Server = mysql_57; Port=3306; Uid = root; Pwd = example; Connect Timeout = 5; Pooling=false; "
             WAIT_FOR_PostgreSQL: "Host = postgres; Port=5432; User ID=postgres; Password=postgres; Database=postgres; Timeout = 5; Pooling=false; "
             Wait_For_Oracle_11g: "DATA SOURCE=oracle11xe; USER ID=system; PASSWORD=oracle;CONNECTION TIMEOUT=3"
             WAIT_FOR_MSSQL: "Data Source=sqlserver; User ID=sa; Password=~1qazxsw2; Timeout = 5; Pooling=false; "
@@ -42,13 +42,14 @@ services:
             WAIT_FOR_Ping_redis: "redis"
             WAIT_FOR_Ping_sqlserver: "sqlserver"
             WAIT_FOR_Ping_mongodb: "mongodb"
-            WAIT_FOR_Ping_mysql1: "mysql"
+            WAIT_FOR_Ping_mysql1: "mysql_55"
             WAIT_FOR_Ping_mysql2: "mysql_57"
             Wait_For_Tcp: 'google.com:443'
 
         depends_on:
          - "hellorest"
-         - "mysql"
+         - "mysql_55"
+         - "mysql_57"
          - "redis"
          - "postgres"
          - "mongodb"
@@ -56,7 +57,7 @@ services:
          - "sqlserver"
          - "oracle11xe"
 
-    mysql:
+    mysql_55:
         image: mysql:5.5
         restart: "no"
         environment:
