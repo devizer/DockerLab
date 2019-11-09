@@ -8,3 +8,7 @@ for prj in HelloRest WaitFor; do
   dotnet publish -o ../compose/bin/$prj -c Debug
   popd
 done
+
+# echo runtimeconfig.json:
+# cat bin/WaitFor/*runtimeconfig.json
+
