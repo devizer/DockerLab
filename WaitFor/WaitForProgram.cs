@@ -74,16 +74,29 @@ namespace TheApp
                 Console.WriteLine($"WaitFor {appVer} {Environment.NewLine}");
             }
 
-            if (needHelp)
+            Action showHelp = () =>
             {
                 StringBuilder b = new StringBuilder();
                 p.WriteOptionDescriptions(new StringWriter(b));
                 Console.WriteLine(b);
-                Console.WriteLine("Wanted dependencies accepted via both command line arguments above and environment variables.");
+                Console.WriteLine("Wanted dependencies accepted via both command line arguments above " +
+                                  "and environment variables.");
                 Console.WriteLine("The options and env var names are case insensitive.");
+            };
+            
+            
+            if (needHelp)
+            {
+                showHelp();
                 return 0;
             }
 
+            if (Model.Connections.Count == 0)
+            {
+                showHelp();
+                return 0;
+            }
+            
             StringBuilder startup = new StringBuilder("Waiting for network services:");
             foreach (var m in Model.Connections.OrderBy(x => x.Family.ToString()))
             {
