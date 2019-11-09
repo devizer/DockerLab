@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -99,18 +100,33 @@ namespace Universe.HttpWaiter
             {
                 ret.Headers.Add(new KeyValuePair<string, List<string>>(hdr.Key, new List<string>(hdr.Value)));
             }
+            foreach (KeyValuePair<string, IEnumerable<string>> hdr in response.Content.Headers)
+            {
+                ret.Headers.Add(new KeyValuePair<string, List<string>>(hdr.Key, new List<string>(hdr.Value)));
+            }
 
-            var body = await response.Content.ReadAsByteArrayAsync();
-            ret.Body = body;
             bool isValid = cs.ExpectedStatus.IsValid(statusInt);
             if (!isValid)
                 throw new InvalidOperationException($"Returned status code {statusInt} does not conform expected '{cs.ExpectedStatus.OriginalString}'. Request: \"{cs.ConnectionString}\"");
+            
+
+            var bodyStream = await response.Content.ReadAsStreamAsync();
+            StreamWithCounters streamCopy = new StreamWithCounters(Stream.Null);
+            bodyStream.CopyTo(streamCopy);
+            var totalBytes = streamCopy.TotalWrittenBytes;
+            ret.ContentLength = totalBytes;
+            
+            // var body = await response.Content.ReadAsByteArrayAsync();
+            // ret.Body = body;
+
 
             return ret;
         }
 
         public static async Task GoSimpler(HttpConnectionString cs, CancellationToken cancellationToken = default(CancellationToken))
         {
+            // await Go(cs, cancellationToken);
+            // return;
             if (cancellationToken == default(CancellationToken))
                 cancellationToken = CancellationToken.None;
 
@@ -214,6 +230,8 @@ namespace Universe.HttpWaiter
         public int StatusCode { get; internal set; }
         public string StatusPhrase { get; internal set; }
         public List<KeyValuePair<string, List<string>>> Headers { get; internal set; }
-        public byte[] Body { get; internal set; }
+        
+        // public byte[] Body { get; internal set; }
+        public long ContentLength { get; internal set; }
     }
 }

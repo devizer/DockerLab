@@ -134,8 +134,17 @@ namespace WaitFor
                     .Value?.FirstOrDefault();
 
             if (string.IsNullOrEmpty(server)) server = "N/A";
+            
+            var contentType =
+                probeResult.Headers
+                    .FirstOrDefault(x => "content-type".Equals(x.Key, StringComparison.InvariantCultureIgnoreCase))
+                    .Value?.FirstOrDefault();
+            
+            // Console.WriteLine("Headers: " + string.Join(", ", probeResult.Headers.Select(x => $"[{x.Key}]")));
 
-            return $"{(HttpStatusCode)probeResult.StatusCode} ({probeResult.StatusCode}). Server: {server}. {probeResult.Body.Length} bytes received";
+            var contentTypeInfo = string.IsNullOrEmpty(contentType) ? "" : $" [{contentType}]";
+            
+            return $"{(HttpStatusCode)probeResult.StatusCode} ({probeResult.StatusCode}). Server: {server}. {probeResult.ContentLength} bytes{contentTypeInfo} received";
         }
 
 
