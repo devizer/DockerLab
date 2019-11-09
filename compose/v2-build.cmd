@@ -1,1 +1,0 @@
-bash v2-build.sh

@@ -1,11 +1,11 @@
 [mysqld]
 max_allowed_packet = 128M
-innodb_buffer_pool_size = 16M
-query_cache_size = 16M
-table_cache = 512
+innodb_buffer_pool_size = 1M
+query_cache_size = 1M
+# table_cache = 512
 character_set_server = utf8
 collation_server = utf8_general_ci
-key_buffer_size = 16M
+key_buffer_size = 1M
 # bind-address = 0.0.0.0
 
 # ./custom.cnf:/etc/mysql/conf.d/custom.cnf
