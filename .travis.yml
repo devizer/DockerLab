@@ -34,3 +34,8 @@ install:
 script:
     - time dotnet restore --disable-parallel 
     - cd compose && bash -e compose-up.sh
+
+cache:
+  directories:
+    - '/home/travis/.local/share/NuGet/'
+    - '/home/travis/.nuget/'
