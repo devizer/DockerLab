@@ -90,19 +90,19 @@ services:
             - "3306"
 
     redis:
-        image: redis
+        image: redis:4-alpine
         restart: "no"
         ports:
         - "6379:6379"
 
     redis_another:
-        image: redis:3.2
+        image: redis:3.2-alpine
         restart: "no"
         ports:
         - "6378:6379"
 
     postgres:
-        image: postgres:9.4
+        image: postgres:9.4-alpine
         restart: "no"
         environment:
             POSTGRES_PASSWORD: postgres
@@ -116,7 +116,7 @@ services:
         - "27017"
 
     rabbitmq:
-        image: rabbitmq:3.4
+        image: rabbitmq:3.6-alpine
         restart: "no"
         ports:
         - "5672"
@@ -138,13 +138,13 @@ services:
         - "11211"
 
     nginx1:
-        image: nginx
+        image: nginx:alpine
         ports:
         - "8091:80"
         command: [nginx-debug, '-g', 'daemon off;']
 
     nginx2:
-        image: nginx
+        image: nginx:alpine
         ports:
         - "8092:80"
         command: [nginx-debug, '-g', 'daemon off;']
