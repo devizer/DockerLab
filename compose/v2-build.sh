@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# export MSBuildSDKsPath="xx"
+echo MSBuildSDKsPath: ${MSBuildSDKsPath}
 for prj in WaitFor HelloRest; do
   pushd ../$prj
   rm -rf ../compose/bin/$prj
