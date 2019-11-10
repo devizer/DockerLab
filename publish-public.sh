@@ -48,12 +48,16 @@ dotnet restore --disable-parallel || true
 
 for r in linux-x64 linux-arm linux-arm64 osx-x64 linux-musl-x64 rhel.6-x64 win-arm win-arm64 win-x86 win-x64; do
 
-  mkdir -p bin/warped-normal bin/warped-aggressive bin/warped-default
+  mkdir -p bin/warped
   # say "Warping Default $r [$ver]"
   # dotnet-warp -r $r -o bin/warped-default/parallel-wait-for-$r -v 
 
-  # say "Warping Normal $r [$ver]"
-  # dotnet-warp -r $r -o bin/warped-normal/parallel-wait-for-$r -l Normal -v 
+  if [[ $r == linux-x64 || $r == "win"* ]]; then
+    say "Warping Default $r [$ver]"
+    file=parallel-wait-for-$r
+    [[ $r == "win"* ]] && file=parallel-wait-for-$r.exe
+    dotnet-warp -r $r -o bin/warped/$file
+  fi 
 
   # say "Warping Aggressive $r [$ver]"
   # dotnet-warp -r $r -o bin/warped-aggressive/parallel-wait-for-$r -l Aggressive -v 
@@ -63,6 +67,10 @@ for r in linux-x64 linux-arm linux-arm64 osx-x64 linux-musl-x64 rhel.6-x64 win-a
   pushd bin/$r
   for ext in dll so txt a; do eval "ls *.${ext} >/dev/null 2>&1 && chmod 644 *.${ext} || true"; done
   [[ -x WaitFor ]] && chmod 755 WaitFor
+  
+  for killit in Dockerfile; do
+    rm -f $killit >/dev/null 2>&1 || true;
+  done
 
   say "Compressing $r [$ver] as GZIP|ZIP"
   echo $ver > VERSION
@@ -92,6 +100,7 @@ pushd $clone >/dev/null
 git add --all .
 say "Commit binaries [$ver]"
 git commit -am "Update $ver"
+exit;
 say "Publish binaries [$ver]"
 git push
 popd >/dev/null

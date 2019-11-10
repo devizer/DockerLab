@@ -28,7 +28,8 @@ namespace Universe.HttpWaiter
             
             HttpMessageHandler mHandler = new HttpClientHandler()
             {
-                ServerCertificateCustomValidationCallback = sslCallback
+                ServerCertificateCustomValidationCallback = sslCallback,
+                AllowAutoRedirect = true,
             };
             
             HttpClient c = new HttpClient(mHandler)
