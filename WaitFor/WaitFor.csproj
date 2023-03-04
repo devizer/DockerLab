@@ -32,7 +32,7 @@
     <PackageReference Include="Dapper" Version="2.0.30" />
     <PackageReference Include="EnyimMemcachedCore" Version="2.1.12" />
     <!--<PackageReference Include="ILLink.Tasks" Version="0.1.5-0.1.5-preview-1841731" />-->
-    <PackageReference Include="MongoDB.Driver" Version="2.9.3" />
+    <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
     <PackageReference Include="MySql.Data" Version="8.0.18" />
     <PackageReference Include="Npgsql" Version="4.1.1" />
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.50" />
